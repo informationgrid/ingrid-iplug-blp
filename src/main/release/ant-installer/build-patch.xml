@@ -1,0 +1,118 @@
+<!--
+  **************************************************-
+  InGrid-iPlug DSC
+  ==================================================
+  Copyright (C) 2014 - 2015 wemove digital solutions GmbH
+  ==================================================
+  Licensed under the EUPL, Version 1.1 or – as soon they will be
+  approved by the European Commission - subsequent versions of the
+  EUPL (the "Licence");
+  
+  You may not use this work except in compliance with the Licence.
+  You may obtain a copy of the Licence at:
+  
+  http://ec.europa.eu/idabc/eupl5
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the Licence is distributed on an "AS IS" basis,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the Licence for the specific language governing permissions and
+  limitations under the Licence.
+  **************************************************#
+  -->
+<project name="iplug-dsc Patches">
+
+	<target name="patchFromVersion3.3.0">
+        <compareVersion value1="${oldVersion}" value2="3.3.0" prop="compResult"/>
+        <if>
+            <not>
+                <equals arg1="${compResult}" arg2="1" />
+            </not>
+            <then>
+                <echo>Patching spring.xml file in basedir: </echo>
+                <patchFile patchFile="patches/3.3.1/spring_${springConfig}.xml.patch" originalFile="${installDir}/webapp/WEB-INF/spring.xml" />
+            </then>
+            <else>
+              <echo>Nothing to do!</echo>
+            </else>
+        </if>
+    </target>
+
+    <target name="patchFromVersion3.3.1">
+        <compareVersion value1="${oldVersion}" value2="3.3.1" prop="compResult"/>
+        <if>
+            <not>
+                <equals arg1="${compResult}" arg2="1" />
+            </not>
+            <then>
+                <echo>Patching spring.xml file in basedir: </echo>
+                <patchFile patchFile="patches/3.3.2/spring_${springConfig}.xml.patch" originalFile="${installDir}/webapp/WEB-INF/spring.xml" />
+            </then>
+            <else>
+              <echo>Nothing to do!</echo>
+            </else>
+        </if>
+    </target>
+    
+    <target name="patchFromVersion3.5.0">
+        <compareVersion value1="${oldVersion}" value2="3.5.0" prop="compResult"/>
+        <if>
+            <not>
+                <equals arg1="${compResult}" arg2="1" />
+            </not>
+            <then>
+                <echo>Removing old index directory, which is replaced by ElasticSearch </echo>
+                <delete dir="${installDir}/index" />
+            </then>
+            <else>
+              <echo>Nothing to do!</echo>
+            </else>
+        </if>
+    </target>
+    
+    <target name="patchFromVersion3.6.0.4">
+        <compareVersion value1="${oldVersion}" value2="3.6.0.4" prop="compResult"/>
+        <if>
+            <not>
+                <equals arg1="${compResult}" arg2="1" />
+            </not>
+            <then>
+                <echo>Migrating password</echo>
+                <java classname="de.ingrid.admin.command.AdminManager" fork="true" dir="${installDir}">
+                    <arg value="migrate_password" />
+                    <classpath>
+                        <fileset dir="${installDir}/lib">
+                           <include name="**/*.jar"/>
+                        </fileset>
+                    </classpath>
+                </java>
+            </then>
+            <else>
+              <echo>Nothing to do!</echo>
+            </else>
+        </if>
+    </target>
+    
+    <target name="patchFromVersion3.6.0.5">
+        <compareVersion value1="${oldVersion}" value2="3.6.0.5" prop="compResult"/>
+        <if>
+            <not>
+                <equals arg1="${compResult}" arg2="1" />
+            </not>
+            <then>
+                <echo>Add idfProducerIndexMapper to index mapper configuration.</echo>
+                <!-- object -->
+                <replaceregexp file="${config}" match="mapper.index.beans=(.*indexMapper.*indexProfileMapper.*)(profileXML['&quot;\s]+}\s*]\s*)$" replace="mapper.index.beans=\1profileXML'&quot;}, {&quot;type&quot;\\\\: &quot;idfProducerIndexMapper&quot;}]" byline="true"/>
+                <!-- address -->
+                <replaceregexp file="${config}" match="mapper.index.beans=(.*indexMapper.*)(\.js[&quot;\s\]\}]+)$" replace="mapper.index.beans=\1\.js&quot;]}, {&quot;type&quot;\\\\: &quot;idfProducerIndexMapper&quot;}]" byline="true"/>
+            </then>
+            <else>
+              <echo>Nothing to do!</echo>
+            </else>
+        </if>
+    </target>    
+
+	<target name="patchFiles" depends="patchFromVersion3.3.0,patchFromVersion3.3.1,patchFromVersion3.5.0,patchFromVersion3.6.0.4,patchFromVersion3.6.0.5">
+		<!-- patch order determined through depends-order -->
+	</target>
+</project>
