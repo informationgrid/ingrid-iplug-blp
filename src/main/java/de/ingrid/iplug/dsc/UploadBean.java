@@ -1,6 +1,6 @@
 /*
  * **************************************************-
- * InGrid-iPlug DSC
+ * ingrid-iplug-excel
  * ==================================================
  * Copyright (C) 2014 - 2019 wemove digital solutions GmbH
  * ==================================================
@@ -20,19 +20,30 @@
  * limitations under the Licence.
  * **************************************************#
  */
-package de.ingrid.iplug.dsc.webapp.controller;
+package de.ingrid.iplug.dsc;
 
-import de.ingrid.admin.IViews;
+import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Constants used for navigation through the webapp.
- * 
- * @author joachim@wemove.com
- * 
- */
-public class AdminViews extends IViews {
+public class UploadBean {
 
-    public static final String DB_PARAMS = "/iplug-pages/dbParams";
-    public static final String EXCEL_UPLOAD = "/iplug-pages/excelUpload";
+    private MultipartFile _multipartFile;
+
+    /**
+     * Get file for upload.
+     * 
+     * @return 
+     *      A multipart file.
+     */
+    public MultipartFile getFile() {
+        return _multipartFile;
+    }
+
+    /** Set file for upload.
+     * 
+     * @param multipartFile
+     */
+    public void setFile(MultipartFile multipartFile) {
+        _multipartFile = multipartFile;
+    }
 
 }
