@@ -25,6 +25,8 @@
  */
 package de.ingrid.iplug.dsc.om;
 
+import java.util.UUID;
+
 import de.ingrid.iplug.dsc.utils.UVPDataImporter.BlpModel;
 import de.ingrid.utils.ElasticDocument;
 
@@ -45,58 +47,35 @@ public class BLPSourceRecord extends SourceRecord {
     public static final String INDEX_DOCUMENT = "idxDoc";
     
     public static final String BLP_MODEL = "blpModel";
+    
+    public static final String ORGANISATION = "organisation";
 
-
-//    /**
-//     * Creates a BLPRecord. It holds the excel row number and the
-//     * chosen URL column number.
-//     * 
-//     * @param row
-//     * @param column
-//     */
-//    public BLPSourceRecord(Integer row, Integer column) {
-//        super( String.format( "r%d;c%d", row, column) );
-//        this.put( ROW, row );
-//        this.put( COLUMN, column );
-//    }
-//
-//    /**
-//     * Creates a BLPRecord. It holds the excel row number and the
-//     * chosen URL column number and an Elastic Index Document for further usage.
-//     * 
-//     * @param row
-//     * @param column
-//     * @param connection
-//     */
-//    public BLPSourceRecord(Integer row, Integer column, ElasticDocument idxDoc) {
-//        super( String.format( "r%d;c%d", row, column) );
-//        this.put( ROW, row );
-//        this.put( INDEX_DOCUMENT, idxDoc );
-//        this.put( COLUMN, column );
-//    }
     
     /**
      * Creates a BLPRecord. It holds the excel blpModel aswell
-     * as the modelname as the records ID
+     * as the organisation
      * 
      * @param blpModel
+     * @param organisation
      */
-    public BLPSourceRecord(BlpModel blpModel) {
-        super(blpModel.getName());
+    public BLPSourceRecord(BlpModel blpModel, String organisation) {
+        super(UUID.randomUUID().toString());
         this.put( BLP_MODEL, blpModel );
+        this.put( ORGANISATION, organisation );
     }
     
     /**
      * Creates a BLPRecord. It holds the excel blpModel aswell
-     * as the modelname as the records ID and an Elastic Index Document
+     * as the organisation and an Elastic Index Document
      *  for further usage.
      * 
      * @param blpModel
      * @param idxDoc
      */
-    public BLPSourceRecord(BlpModel blpModel, ElasticDocument idxDoc) {
-        super(blpModel.getName());
+    public BLPSourceRecord(BlpModel blpModel, String organisation, ElasticDocument idxDoc) {
+        super(UUID.randomUUID().toString());
         this.put( BLP_MODEL, blpModel );
+        this.put( ORGANISATION, organisation );
         this.put( INDEX_DOCUMENT, idxDoc );
     }
 

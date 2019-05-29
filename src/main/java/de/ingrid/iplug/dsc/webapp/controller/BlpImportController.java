@@ -22,9 +22,9 @@
  */
 package de.ingrid.iplug.dsc.webapp.controller;
 
-
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
@@ -55,9 +55,12 @@ import de.ingrid.iplug.dsc.utils.UVPDataImporter;
 @SessionAttributes("plugDescription")
 public class BlpImportController extends AbstractController {
     
-     @RequestMapping(value = { "/iplug-pages/excelUpload.html" }, method = RequestMethod.GET)
-    public String showBlpImport(@ModelAttribute("uploadBean") final UploadBean uploadBean, final ModelMap modelMap, HttpServletRequest request, HttpServletResponse response, @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject) throws Exception {
-         return AdminViews.EXCEL_UPLOAD;
+    String resultLog = "Noch kein Upload gestartet";
+
+    @RequestMapping(value = { "/iplug-pages/excelUpload.html" }, method = RequestMethod.GET)
+    public String showBlpImport(@ModelAttribute("uploadBean") final UploadBean uploadBean, final ModelMap modelMap, HttpServletRequest request, HttpServletResponse response,
+            @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject) throws Exception {
+        return AdminViews.EXCEL_UPLOAD;
     }
 
     /**
@@ -69,37 +72,43 @@ public class BlpImportController extends AbstractController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST)
-    public String upload(@ModelAttribute("uploadBean") final UploadBean uploadBean, final Model model, @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject ) throws IOException {
-
+    public String upload(@ModelAttribute("uploadBean") final UploadBean uploadBean, final Model model, @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject)
+            throws IOException {
 
         MultipartFile uploadedFile = uploadBean.getFile();
         if (uploadBean.getFile().isEmpty()) {
             return AdminViews.EXCEL_UPLOAD;
         }
-        
-        File wd = commandObject.getWorkinDirectory();       
-        File dataDir = new File(wd, "data");
+
+        File wd = commandObject.getWorkinDirectory();
+        File dataDir = new File( wd, "data" );
         dataDir.mkdirs();
-        deleteAllFilesInDirectory(dataDir);
-        createWarningFile(dataDir);
-        
-        
-        File xlsFile = new File(dataDir, uploadedFile.getOriginalFilename());
+        deleteAllFilesInDirectory( dataDir );
+        createWarningFile( dataDir );
+
+        File xlsFile = new File( dataDir, uploadedFile.getOriginalFilename() );
         Files.write( xlsFile.toPath(), uploadedFile.getBytes(), StandardOpenOption.CREATE );
+
+        UVPDataImporter importer = new UVPDataImporter( xlsFile );
+        resultLog = importer.analyzeExcelFile();
+        System.out.println( resultLog );
         
-        UVPDataImporter importer = new UVPDataImporter(xlsFile);
-        importer.validateExcelFile();
-        return AdminViews.EXCEL_UPLOAD;
+        return "redirect:/iplug-pages/excelUpload.html";
     }
     
-    
+    @ModelAttribute("resultLog")
+    public String getResultLog() throws UnsupportedEncodingException {
+        return resultLog.replaceAll( "\n", "<br>");
+    }
+
     private void deleteAllFilesInDirectory(File directory) {
-        for (File f : directory.listFiles()){
+        for (File f : directory.listFiles()) {
             f.delete();
         }
     }
+
     private void createWarningFile(File directory) throws IOException {
-        Files.write( new File(directory, "READ_ME").toPath(),  "Warning!  All files in here will be deleted when a new Excelfile is uploaded!!!".getBytes(), StandardOpenOption.CREATE );
+        Files.write( new File( directory, "READ_ME" ).toPath(), "Warning!  All files in here will be deleted when a new Excelfile is uploaded!!!".getBytes(), StandardOpenOption.CREATE );
     }
 
 }

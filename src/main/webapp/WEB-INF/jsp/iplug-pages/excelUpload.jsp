@@ -35,6 +35,7 @@
 <meta name="copyright" content="wemove digital solutions GmbH" />
 <link rel="StyleSheet" href="../css/base/portal_u.css" type="text/css"
 	media="all" />
+<script type="text/javascript" src="../js/base/jquery-1.8.0.min.js"></script>
 
 </head>
 <body>
@@ -67,8 +68,8 @@
 		<h1 id="head">Datei Upload</h1>
 		<div class="controls">
 			<a href="../base/extras.html">Zur&uuml;ck</a> <a
-				href="../base/welcome.html">Abbrechen</a> <a href="#"
-				onclick="document.getElementById('dbConfig').submit();">Weiter</a>
+				href="../base/welcome.html">Abbrechen</a> <a
+				href="../base/save.html">Weiter</a>
 		</div>
 		<div class="controls cBottom">
 			<a href="../base/extras.html">Zur&uuml;ck</a> <a
@@ -76,11 +77,21 @@
 				onclick="document.getElementById('dbConfig').submit();">Weiter</a>
 		</div>
 		<div id="content">
+			<h2>Wählen Sie eine Excel Datei aus, die Sie indizieren möchten:</h2>
+			<div class="hint" onclick="$('#filterComment').toggle()">
+				<span class="ui-icon ui-icon-arrow-1-e"></span>Hinweise
+			</div>
+			<div id="filterComment" class="comment" style="display: none;">
+				<ul>
+					<li>Alle bargestellt.</li>
+				</ul>
+			</div>
 
+			<fieldset>
+				<legend>Dateiupload</legend>
 				<div id="content">
-				<h2>Wählen Sie eine Excel Datei aus, die Sie indizieren möchten:</h2>
-					<form:form action="../iplug-pages/excelUpload.html"
-						enctype="multipart/form-data" modelAttribute="blpImportBean">
+					<row> <form:form action="../iplug-pages/excelUpload.html"
+						enctype="multipart/form-data" modelAttribute="uploadBean">
 
 						<row> <label> Excel Datei: </label> <field>
 						<div class="input full">
@@ -88,19 +99,28 @@
 							<form:errors path="file" cssClass="error" element="div" />
 						</div>
 						</field> <desc></desc> </row>
-					</form:form>
-					<row> <field>
+					</form:form> </row>
+					<row>
 					<div class="controls cBottom">
-						<!--<a href="#" onclick="document.location='../iplug-pages/listInstances.html';">Abbrechen</a>-->
 						<a href="#"
-							onclick="document.getElementById('blpImportBean').submit();">Upload</a>
+							onclick="document.getElementById('uploadBean').submit();">Upload</a>
 					</div>
-					</field> <desc></desc> </row>
+					</row>
+			</fieldset>
+
+			<fieldset id="statusContainer">
+				<legend>Status</legend>
+				<div id="importInfo" class="space"></div>
+				<div id="allInfo">
+					<div id="statusContent">
+						<p>${resultLog}</p>
+					</div>
+				</div>
+			</fieldset>
 
 		</div>
-	</div>
 
-	<div id="footer" style="height: 100px; width: 90%"></div>
+		<div id="footer" style="height: 100px; width: 90%"></div>
 </body>
 </html>
 

@@ -26,6 +26,7 @@
 package de.ingrid.iplug.dsc.index.producer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,6 +37,8 @@ import de.ingrid.iplug.dsc.om.BLPSourceRecord;
 import de.ingrid.iplug.dsc.om.SourceRecord;
 import de.ingrid.iplug.dsc.utils.UVPDataImporter;
 import de.ingrid.iplug.dsc.utils.UVPDataImporter.BlpModel;
+import de.ingrid.utils.IConfigurable;
+import de.ingrid.utils.PlugDescription;
 
 /**
  * Takes care of selecting all source record Ids from a database. The SQL
@@ -49,11 +52,13 @@ import de.ingrid.iplug.dsc.utils.UVPDataImporter.BlpModel;
  */
 // Bean created depending on SpringConfiguration
 // @Service
-public class BLPRecordSetProducer implements IRecordSetProducer {
+public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
 
     Iterator<BlpModel> recordIterator = null;
     private int numRecords;
     private File excelFile = null;
+    private File workingDir;
+    private String organisation;
 
     final private static Log log = LogFactory.getLog( BLPRecordSetProducer.class );
 
@@ -95,12 +100,12 @@ public class BLPRecordSetProducer implements IRecordSetProducer {
      */
     @Override
     public SourceRecord next() {
-        return new BLPSourceRecord( recordIterator.next() );
+        return new BLPSourceRecord( recordIterator.next(), organisation );
     }
 
     private void createBLPRecordsFromExcelFile() {
         try {
-            List<BlpModel> blpRecords = UVPDataImporter.readData( getExcelFile() );
+            List<BlpModel> blpRecords = UVPDataImporter.getValidModels( getExcelFile() );
             if (log.isDebugEnabled()) {
                 log.debug( "Found records: " + blpRecords.size() );
             }
@@ -117,7 +122,17 @@ public class BLPRecordSetProducer implements IRecordSetProducer {
         return numRecords;
     }
 
-    public File getExcelFile() {
+    public File getExcelFile() throws FileNotFoundException {
+        if (excelFile == null) {
+            File dataDir = new File(workingDir, "data");
+            for(File f : dataDir.listFiles()) {
+                String name = f.getName().toLowerCase();
+                if(name.endsWith( ".xls") || name.endsWith( ".xlsx" )) {
+                    return f;
+                }
+            }
+            throw new FileNotFoundException(String.format( "No Excel file found in '%s'" , dataDir.toString()));
+        }
         return excelFile;
     }
 
@@ -127,6 +142,12 @@ public class BLPRecordSetProducer implements IRecordSetProducer {
 
     public void setExcelFilename(String excelFilename) {
         setExcelFile( new File( excelFilename ) );
+    }
+
+    @Override
+    public void configure(PlugDescription plugDescription) {
+        this.workingDir = plugDescription.getWorkinDirectory();
+        this.organisation = plugDescription.getOrganisationPartnerAbbr();
     }
 
 }

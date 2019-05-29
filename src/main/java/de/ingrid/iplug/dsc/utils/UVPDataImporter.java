@@ -87,18 +87,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class UVPDataImporter {
 
-    private File excelFile; 
+    private File excelFile;
     private InputStream excelFileInputStream;
-    
-    
+
     public UVPDataImporter(File excelFile) {
         this.excelFile = excelFile;
     }
-    
+
     public UVPDataImporter() {
-        
+
     }
-    
+
     /**
      * Scan Excel file and gather all infos. Requires a specific excel table
      * layout
@@ -107,9 +106,8 @@ public class UVPDataImporter {
      * @throws IOException
      */
     public List<BlpModel> readData() throws IOException {
-        return readData(excelFile);        
+        return readData( excelFile );
     }
-
 
     /**
      * Scan Excel file and gather all infos. Requires a specific excel table
@@ -331,18 +329,18 @@ public class UVPDataImporter {
 
     public class BlpModel {
 
-        private String name;
-        Double lat;
-        Double lon;
-        String urlBlpInProgress;
-        String urlBlpFinished;
-        String urlFnpInProgress;
-        String urlFnpFinished;
-        String urlBpInProgress;
-        String urlBpFinished;
-        String descr;
-        boolean hasMarker = false;
-        List<StatusEntry> errors = new ArrayList<StatusEntry>();
+        public String name;
+        public Double lat;
+        public Double lon;
+        public String urlBlpInProgress;
+        public String urlBlpFinished;
+        public String urlFnpInProgress;
+        public String urlFnpFinished;
+        public String urlBpInProgress;
+        public String urlBpFinished;
+        public String descr;
+        public boolean hasMarker = false;
+        public List<StatusEntry> errors = new ArrayList<StatusEntry>();
 
         @Override
         public String toString() {
@@ -360,17 +358,48 @@ public class UVPDataImporter {
 
     }
 
-    public void validateExcelFile() throws IOException {
-        readData();
-        // TODO implement checks without the rest
-        
+    public String analyzeExcelFile() throws IOException {
+        String logString = "";
+        List<BlpModel> models;
+        try {
+            models = readData();
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+        int withErrors = 0;
+        int total = models.size();
+        for (BlpModel model : models) {
+            if (!model.errors.isEmpty()) {
+                withErrors++;
+                logString += model.getName() + ": \n";
+                for (StatusEntry se : model.errors) {
+                    logString += String.format( "%s %s \n", se.type, se.message );
+                }
+                logString += "\n";
+            }
+        }
+        if (withErrors < 1) {
+            logString = String.format( "Excel Datei hochgeladen. Es wurden alle %d Einträge validiert.", total );
+        } else {
+            logString = String.format( "Excel Datei hochgeladen. Es wurden %d von %d Einträgen validiert. Bei %d Einträgen kam es zu Fehlern: \n\n %s", total - withErrors, total, withErrors, logString );
+        }
+        return logString;
     }
-
+    
+    public static List<BlpModel> getValidModels(File excelFile) throws IOException{
+        List<BlpModel> models = readData(excelFile);
+        List<BlpModel> validModels = new ArrayList<>();
+        for (BlpModel model : models) {
+            if (model.errors.isEmpty()) {
+                validModels.add( model );
+            }
+        }
+        return validModels;
+    }
 
     public File getExcelFile() {
         return excelFile;
     }
-
 
     public void setExcelFile(File excelFile) {
         this.excelFile = excelFile;
