@@ -22,22 +22,9 @@
  */
 package de.ingrid.iplug.dsc;
 
-import de.ingrid.iplug.dsc.index.DscDocumentProducer;
-import de.ingrid.iplug.dsc.index.mapper.IRecordMapper;
-import de.ingrid.iplug.dsc.index.mapper.IdfProducerDocumentMapper;
-import de.ingrid.iplug.dsc.index.mapper.IgcProfileDocumentMapper;
-import de.ingrid.iplug.dsc.index.mapper.ScriptedDocumentMapper;
-import de.ingrid.iplug.dsc.index.producer.IRecordSetProducer;
-import de.ingrid.iplug.dsc.index.producer.PlugDescriptionConfiguredDatabaseRecordSetProducer;
-import de.ingrid.iplug.dsc.record.DscRecordCreator;
-import de.ingrid.iplug.dsc.record.mapper.CreateIdfMapper;
-import de.ingrid.iplug.dsc.record.mapper.IIdfMapper;
-import de.ingrid.iplug.dsc.record.mapper.IgcProfileIdfMapper;
-import de.ingrid.iplug.dsc.record.mapper.ScriptedIdfMapper;
-import de.ingrid.iplug.dsc.record.producer.IRecordProducer;
-import de.ingrid.iplug.dsc.record.producer.PlugDescriptionConfiguredDatabaseRecordProducer;
-import de.ingrid.utils.IngridDocument;
-import de.ingrid.utils.json.JsonUtil;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.parser.ParseException;
@@ -47,8 +34,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.util.ArrayList;
-import java.util.List;
+import de.ingrid.iplug.dsc.index.DscDocumentProducer;
+import de.ingrid.iplug.dsc.index.mapper.IRecordMapper;
+import de.ingrid.iplug.dsc.index.mapper.IdfProducerDocumentMapper;
+import de.ingrid.iplug.dsc.index.mapper.IgcProfileDocumentMapper;
+import de.ingrid.iplug.dsc.index.mapper.ScriptedDocumentMapper;
+import de.ingrid.iplug.dsc.index.producer.BLPRecordSetProducer;
+import de.ingrid.iplug.dsc.index.producer.IRecordSetProducer;
+import de.ingrid.iplug.dsc.record.DscRecordCreator;
+import de.ingrid.iplug.dsc.record.mapper.CreateIdfMapper;
+import de.ingrid.iplug.dsc.record.mapper.IIdfMapper;
+import de.ingrid.iplug.dsc.record.mapper.IgcProfileIdfMapper;
+import de.ingrid.iplug.dsc.record.mapper.ScriptedIdfMapper;
+import de.ingrid.iplug.dsc.record.producer.IRecordProducer;
+import de.ingrid.iplug.dsc.record.producer.PlugDescriptionConfiguredDatabaseRecordProducer;
+import de.ingrid.utils.IngridDocument;
+import de.ingrid.utils.json.JsonUtil;
 
 @Configuration
 // @EnableAutoConfiguration
@@ -170,9 +171,8 @@ public class SpringConfiguration {
     }
 
     @Bean
-    public PlugDescriptionConfiguredDatabaseRecordSetProducer recordSetProducer() {
-        PlugDescriptionConfiguredDatabaseRecordSetProducer producer = new PlugDescriptionConfiguredDatabaseRecordSetProducer();
-        producer.setRecordSql( dscConfig.indexMapperSql );
+    public BLPRecordSetProducer recordSetProducer() {
+        BLPRecordSetProducer producer = new BLPRecordSetProducer();
         return producer;
     }
 
