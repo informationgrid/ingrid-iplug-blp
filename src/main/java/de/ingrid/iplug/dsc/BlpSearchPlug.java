@@ -51,12 +51,12 @@ import org.springframework.stereotype.Service;
  * @author joachim@wemove.com
  */
 @Service
-public class DscSearchPlug extends HeartBeatPlug implements IRecordLoader {
+public class BlpSearchPlug extends HeartBeatPlug implements IRecordLoader {
 
     /**
      * The logging object
      */
-    private static Log log = LogFactory.getLog(DscSearchPlug.class);
+    private static Log log = LogFactory.getLog(BlpSearchPlug.class);
 
     @Autowired
     private ElasticConfig elasticConfig;
@@ -73,7 +73,7 @@ public class DscSearchPlug extends HeartBeatPlug implements IRecordLoader {
     private final IndexScheduler indexScheduler;
 
     @Autowired
-    public DscSearchPlug(final IndexImpl indexSearcher,
+    public BlpSearchPlug(final IndexImpl indexSearcher,
                          IPlugdescriptionFieldFilter[] fieldFilters,
                          IMetadataInjector[] injector, IPreProcessor[] preProcessors,
                          IPostProcessor[] postProcessors, DscRecordCreator producer, IndexScheduler indexScheduler) {

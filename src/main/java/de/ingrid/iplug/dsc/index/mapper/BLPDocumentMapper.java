@@ -32,7 +32,6 @@ import de.ingrid.utils.ElasticDocument;
 
 public class BLPDocumentMapper implements IRecordMapper {
 
-
     /*
      * (non-Javadoc)
      *
@@ -48,8 +47,8 @@ public class BLPDocumentMapper implements IRecordMapper {
 
         BlpModel model = (BlpModel) record.get( BLPSourceRecord.BLP_MODEL );
 
-        doc.put( "title", model.name );
-        doc.put( "summary", model.descr );
+        doc.put( "title", "Bauleitplanung: " + model.name );
+        // doc.put( "summary", model.descr );
         doc.put( "partner", (String) record.get( BLPSourceRecord.ORGANISATION ) );
 
         doc.put( "blp_name", model.name );
@@ -58,20 +57,42 @@ public class BLPDocumentMapper implements IRecordMapper {
         doc.put( "x2", model.lon );
         doc.put( "y1", model.lat );
         doc.put( "y2", model.lat );
-        if (model.urlBlpInProgress != null)
-            doc.put( "blp_url_in_progress", model.urlBlpInProgress );
-        if (model.urlBlpFinished != null)
-            doc.put( "blp_url_finished", model.urlBlpFinished );
-        if (model.urlFnpInProgress != null)
-            doc.put( "fnp_url_in_progress", model.urlFnpInProgress );
-        if (model.urlFnpFinished != null)
-            doc.put( "fnp_url_finished", model.urlFnpFinished );
-        if (model.urlBpInProgress != null)
-            doc.put( "bp_url_in_progress", model.urlBpInProgress );
-        if (model.urlBpFinished != null)
-            doc.put( "bp_url_finished", model.urlBpFinished );
+        
+        String additionalHtml = "";
+        if (model.descr != null) {
+            additionalHtml += String.format( "<p>Mitgliedsgemeinden: %s</p>", model.descr );
+        }
+        
+        
+        additionalHtml += "<p>Nutzen Sie die folgenden Links um zu den Bauleitplanungs-Seiten zu gelangen:</p>";
+        
 
-        doc.put( "additional_html_1", "<div>Test</div>" );
+        if (model.urlBlpInProgress != null) {
+            doc.put( "blp_url_in_progress", model.urlBlpInProgress );
+            additionalHtml += String.format( "<p><a href=\"%s\">%s</a></p>", model.urlBlpInProgress, "Bauleitpläne im Beteiligungsverfahren" );
+        }
+        if (model.urlBlpFinished != null) {
+            doc.put( "blp_url_finished", model.urlBlpFinished );
+            additionalHtml += String.format( "<p><a href=\"%s\">%s</a></p>", model.urlBlpFinished, "Wirksame/rechtskräftige Bauleitpläne" );
+        }
+        if (model.urlFnpInProgress != null) {
+            doc.put( "fnp_url_in_progress", model.urlFnpInProgress );
+            additionalHtml += String.format( "<p><a href=\"%s\">%s</a></p>", model.urlFnpInProgress, "Flächennutzungspläne im Beteiligungsverfahren" );
+        }
+        if (model.urlFnpFinished != null) {
+            doc.put( "fnp_url_finished", model.urlFnpFinished );
+            additionalHtml += String.format( "<p><a href=\"%s\">%s</a></p>", model.urlFnpFinished, "Wirksame/rechtskräftige Flächennutzungspläne" );
+        }
+        if (model.urlBpInProgress != null) {
+            doc.put( "bp_url_in_progress", model.urlBpInProgress );
+            additionalHtml += String.format( "<p><a href=\"%s\">%s</a></p>", model.urlBpInProgress, "Bebauungspläne im Beteiligungsverfahren" );
+        }
+        if (model.urlBpFinished != null) {
+            doc.put( "bp_url_finished", model.urlBpFinished );
+            additionalHtml += String.format( "<p><a href=\"%s\">%s</a></p>", model.urlBpFinished, "Wirksame/rechtskräftige Bebauungspläne" );
+        }
+
+        doc.put( "additional_html_1", additionalHtml );
 
         // constants
         doc.put( "datatype", "www" );

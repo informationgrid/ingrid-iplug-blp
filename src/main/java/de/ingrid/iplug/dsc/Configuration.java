@@ -7,12 +7,12 @@
  * Licensed under the EUPL, Version 1.1 or – as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
- * 
+ *
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl5
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,34 +35,34 @@ import java.util.Properties;
 
 @org.springframework.context.annotation.Configuration
 public class Configuration implements IConfig {
-    
+
     private static Log log = LogFactory.getLog(Configuration.class);
-    
+
     @Value("${iplug.database.driver:com.mysql.jdbc.Driver}")
     public String databaseDriver;
-    
+
     @Value("${iplug.database.url:jdbc:mysql://localhost:3306/igc}")
     public String databaseUrl;
-    
+
     @Value("${iplug.database.username:}")
     public String databaseUsername;
-    
+
     @Value("${iplug.database.password:}")
     public String databasePassword;
-    
+
     @Value("${iplug.database.schema:}")
     public String databaseSchema;
 
     public DatabaseConnection dbConnection;
-    
-    
+
+
     /**
      * Should be removed in future versions, when version <3.6.0.3 is nowhere being used!
      */
     @Value("${spring.profile}")
     @Deprecated
     public String springProfile;
-    
+
     @Value("${mapper.index.docSql}")
     public String indexMapperSql;
 
@@ -71,24 +71,24 @@ public class Configuration implements IConfig {
 
     @Value("${mapper.idf.beans:[]}")
     public String idfMapper;
-    
+
     @Value("${mapper.index.beans:[]}")
     public String indexMapper;
 
     @Override
     public void initialize() {
-        
+
         // since 3.6.0.4 there's no profile for spring used anymore
-        // migrate necessary settings accordingly 
+        // migrate necessary settings accordingly
         if (springProfile != null && (indexMapper == null || indexMapper.trim().isEmpty())) {
             ConfigMigration.migrateSpringProfile( springProfile, this );
         }
-        
+
     }
 
     @Override
     public void addPlugdescriptionValues( PlugdescriptionCommandObject pdObject ) {
-        pdObject.put( "iPlugClass", "de.ingrid.iplug.dsc.DscSearchPlug" );
+        pdObject.put( "iPlugClass", "de.ingrid.iplug.dsc.BlpSearchPlug" );
 
         // add necessary fields so iBus actually will query us
         // remove field first to prevent multiple equal entries
@@ -98,18 +98,12 @@ public class Configuration implements IConfig {
         pdObject.addField("t01_object.obj_class");
         pdObject.removeFromList(PlugDescription.FIELDS, "metaclass");
         pdObject.addField("metaclass");
-        
-        this.dbConnection = new DatabaseConnection( databaseDriver, databaseUrl, databaseUsername, databasePassword, databaseSchema );
-        pdObject.setConnection( this.dbConnection );
+
     }
 
     @Override
     public void setPropertiesFromPlugdescription( Properties props, PlugdescriptionCommandObject pd ) {
-        props.setProperty( "iplug.database.driver", databaseDriver);
-        props.setProperty( "iplug.database.url", databaseUrl);
-        props.setProperty( "iplug.database.username", databaseUsername);
-        props.setProperty( "iplug.database.password", databasePassword);
-        props.setProperty( "iplug.database.schema", databaseSchema);
+
     }
 
 

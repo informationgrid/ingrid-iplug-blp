@@ -21,7 +21,7 @@ Installation
 ------------
 
 Download from https://distributions.informationgrid.eu/ingrid-iplug-dsc/
- 
+
 or
 
 build from source with `mvn clean package`.
@@ -42,14 +42,14 @@ Contribute
 
 - Issue Tracker: https://github.com/informationgrid/ingrid-iplug-dsc/issues
 - Source Code: https://github.com/informationgrid/ingrid-iplug-dsc
- 
+
 ### Setup Eclipse project
 
 * import project as Maven-Project
 * right click on project and select Maven -> Select Maven Profiles ... (Ctrl+Alt+P)
 * choose profile "development"
 * run "mvn compile" from Commandline (unpacks base-webapp)
-* run de.ingrid.iplug.dsc.DscSearchPlug as Java Application
+* run de.ingrid.iplug.dsc.BlpSearchPlug as Java Application
 * in browser call "http://localhost:10011" with login "admin/admin"
 
 ### Setup IntelliJ IDEA project
@@ -57,7 +57,7 @@ Contribute
 * choose action "Add Maven Projects" and select pom.xml
 * in Maven panel expand "Profiles" and make sure "development" is checked
 * run "mvn compile" from Commandline (unpacks base-webapp)
-* run de.ingrid.iplug.dsc.DscSearchPlug
+* run de.ingrid.iplug.dsc.BlpSearchPlug
 * in browser call "http://localhost:10011" with login "admin/admin"
 
 Support
