@@ -72,9 +72,9 @@ public class BlpSearchPlug extends HeartBeatPlug implements IRecordLoader {
     private final IndexScheduler indexScheduler;
 
     @Autowired
-    public BlpSearchPlug(final IndexImpl indexSearcher, IPlugdescriptionFieldFilter[] fieldFilters, IMetadataInjector[] injector, IPreProcessor[] preProcessors, IPostProcessor[] postProcessors,
+    public BlpSearchPlug(final IndexImpl indexSearcher, IMetadataInjector[] injector, IPreProcessor[] preProcessors, IPostProcessor[] postProcessors,
             IndexScheduler indexScheduler) {
-        super( 60000, new PlugDescriptionFieldFilters( fieldFilters ), injector, preProcessors, postProcessors );
+        super( 60000, new PlugDescriptionFieldFilters(), injector, preProcessors, postProcessors );
         _indexSearcher = indexSearcher;
         this.indexScheduler = indexScheduler;
     }
