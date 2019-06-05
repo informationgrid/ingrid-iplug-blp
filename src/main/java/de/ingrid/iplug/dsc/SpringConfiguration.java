@@ -22,10 +22,18 @@
  */
 package de.ingrid.iplug.dsc;
 
+import java.util.ArrayList;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.sun.el.parser.ParseException;
+
+import de.ingrid.iplug.dsc.index.DscDocumentProducer;
+import de.ingrid.iplug.dsc.index.mapper.BLPDocumentMapper;
+import de.ingrid.iplug.dsc.index.mapper.IRecordMapper;
 import de.ingrid.iplug.dsc.index.producer.BLPRecordSetProducer;
+import de.ingrid.iplug.dsc.index.producer.IRecordSetProducer;
 
 @Configuration
 // @EnableAutoConfiguration
@@ -34,6 +42,21 @@ public class SpringConfiguration {
     @Bean
     public BLPRecordSetProducer recordSetProducer() {
         BLPRecordSetProducer producer = new BLPRecordSetProducer();
+        return producer;
+    }
+    
+    @Bean
+    public DscDocumentProducer dscDocumentProducer(IRecordSetProducer recordSetProducer) throws ParseException {
+        DscDocumentProducer producer = new DscDocumentProducer();
+
+        producer.setRecordSetProducer( recordSetProducer );
+
+        
+        ArrayList<IRecordMapper> recordMapperList = new ArrayList<IRecordMapper>();
+        recordMapperList.add( (IRecordMapper) new BLPDocumentMapper());
+
+        producer.setRecordMapperList( recordMapperList );
+
         return producer;
     }
 
