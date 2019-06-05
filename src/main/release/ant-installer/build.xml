@@ -31,19 +31,11 @@
 
     <!-- THIS PORPERTIES ARE NECESSARY FOR UPDATES -->
     <property name="libraryDir"         value="lib" />
-    <property name="libraryIdent"       value="ingrid-iplug-dsc-" />
+    <property name="libraryIdent"       value="ingrid-iplug-blp-" />
     <property name="versionsWithConfigurations"  value="" />
-    <property name="minSupportedVersion" value="3.3.0" />
+    <property name="minSupportedVersion" value="5.1.0" />
 
 
-    <import file="build-installer-utils.xml"  as="utils" />
-    <import file="build-patch.xml"            as="patch" />
-
-    
-    <target name="setUpdateProperty" depends="checkPreconditionsForUpdate, extractUpdate">
-        <property name="installType" value="update" />
-        <property name="updateProcedure" value="true" />
-    </target>
     
     <target name="setInstallProperty" depends="extract">
         <property name="installProcedure" value="true" />

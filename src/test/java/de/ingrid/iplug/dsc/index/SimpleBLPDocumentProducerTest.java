@@ -26,18 +26,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.dbunit.DBTestCase;
-import org.dbunit.dataset.IDataSet;
 import org.junit.Test;
 
 import de.ingrid.admin.Config;
@@ -73,8 +67,7 @@ public class SimpleBLPDocumentProducerTest {
             while (dp.hasNext()) {
                 Map<String, Object> doc = dp.next();
                 assertNotNull( doc );
-                Collection<String> keys = Arrays.asList( "name" );
-                System.out.println( doc.get( "name" ) ) ;
+                Collection<String> keys = Arrays.asList( "blp_name" );
                 assertTrue( doc.keySet().containsAll( keys ) );
             }
         } else {

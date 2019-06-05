@@ -1,13 +1,12 @@
-DSC iPlug
+BLP iPlug
 ========
 
-The DSC-iPlug (Data Source Client) connects a JDBC database to the InGrid data space.
+The BLP-iPlug (Bauleitplanung) connects a BLP Excelfile to the InGrid data space.
 
 Features
 --------
 
-- index any JDBC database at a certain schedule
-- flexible indexing functionality (script for indexing and detail data generation)
+- index any BLP Excelfile at a certain schedule
 - provides search functionality on the indexed data
 - GUI for easy administration
 
@@ -15,12 +14,12 @@ Features
 Requirements
 -------------
 
-- a running InGrid Software System
+- a running InGrid Software System with the UVP profile
 
 Installation
 ------------
 
-Download from https://distributions.informationgrid.eu/ingrid-iplug-dsc/
+Download from https://distributions.informationgrid.eu/ingrid-iplug-blp/
 
 or
 
@@ -29,7 +28,7 @@ build from source with `mvn clean package`.
 Execute
 
 ```
-java -jar ingrid-iplug-dsc-x.x.x-installer.jar
+java -jar ingrid-iplug-blp-x.x.x-installer.jar
 ```
 
 and follow the install instructions.
@@ -40,8 +39,8 @@ Obtain further information at http://www.ingrid-oss.eu/ (sorry only in German)
 Contribute
 ----------
 
-- Issue Tracker: https://github.com/informationgrid/ingrid-iplug-dsc/issues
-- Source Code: https://github.com/informationgrid/ingrid-iplug-dsc
+- Issue Tracker: https://github.com/informationgrid/ingrid-iplug-blp/issues
+- Source Code: https://github.com/informationgrid/ingrid-iplug-blp
 
 ### Setup Eclipse project
 
