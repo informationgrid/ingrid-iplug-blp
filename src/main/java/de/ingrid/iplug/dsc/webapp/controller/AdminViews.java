@@ -32,7 +32,6 @@ import de.ingrid.admin.IViews;
  */
 public class AdminViews extends IViews {
 
-    public static final String DB_PARAMS = "/iplug-pages/dbParams";
     public static final String EXCEL_UPLOAD = "/iplug-pages/excelUpload";
 
 }

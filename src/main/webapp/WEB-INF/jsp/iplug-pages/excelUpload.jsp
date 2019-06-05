@@ -61,20 +61,16 @@
 		<a href="#">[?]</a>
 	</div>
 
-	<c:set var="active" value="dbParams" scope="request" />
+	<c:set var="active" value="excelUpload" scope="request" />
 	<c:import url="../base/subNavi.jsp"></c:import>
 
 	<div id="contentBox" class="contentMiddle">
 		<h1 id="head">Datei Upload</h1>
 		<div class="controls">
-			<a href="../base/extras.html">Zur&uuml;ck</a> <a
+			<a href="#" onclick="document.getElementById('uploadBean').submit();">Upload</a><a
+				href="../base/provider.html">Zur&uuml;ck</a> <a
 				href="../base/welcome.html">Abbrechen</a> <a
 				href="../base/save.html">Weiter</a>
-		</div>
-		<div class="controls cBottom">
-			<a href="../base/extras.html">Zur&uuml;ck</a> <a
-				href="../base/welcome.html">Abbrechen</a> <a href="#"
-				onclick="document.getElementById('dbConfig').submit();">Weiter</a>
 		</div>
 		<div id="content">
 			<h2>Wählen Sie eine Excel Datei aus, die Sie indizieren möchten:</h2>
@@ -83,7 +79,7 @@
 			</div>
 			<div id="filterComment" class="comment" style="display: none;">
 				<ul>
-					<li>Alle bargestellt.</li>
+					<li>Alle dargestellt.</li>
 				</ul>
 			</div>
 
@@ -103,7 +99,10 @@
 					<row>
 					<div class="controls cBottom">
 						<a href="#"
-							onclick="document.getElementById('uploadBean').submit();">Upload</a>
+							onclick="document.getElementById('uploadBean').submit();">Upload</a><a
+							href="../base/provider.html">Zur&uuml;ck</a> <a
+							href="../base/welcome.html">Abbrechen</a> <a
+							href="../base/save.html">Weiter</a>
 					</div>
 					</row>
 			</fieldset>
