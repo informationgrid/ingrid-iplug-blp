@@ -64,6 +64,7 @@
         <property name="recordSetProducer" ref="recordSetProducer" />
         <property name="recordMapperList">
             <list>
+                <!-- recordMapper is autowired de.ingrid.iplug.dsc.index.mapper.BLPDocumentMapper  -->
                 <ref bean="recordMapper"/>
                 <!-- PUT IDF ALSO INTO INDEX -->
                 <!-- <ref bean="idfProducerIndexMapper"/> -->
@@ -81,10 +82,6 @@
 
     <!-- READ BLP EXCELFILE -->
     <bean id="recordSetProducer" class="de.ingrid.iplug.dsc.index.producer.BLPRecordSetProducer">
-    </bean>
-
-    <!-- MAP INTO INDEX VIA SCRIPT -->
-    <bean id="recordMapper" class="de.ingrid.iplug.dsc.index.mapper.BLPDocumentMapper">
     </bean>
 
   <!--
