@@ -30,7 +30,7 @@ import de.ingrid.admin.object.AbstractDataType;
 public class BlpDataType extends AbstractDataType {
 
     public BlpDataType() {
-        super("blp", true);
+        super("blp");
         setForceActive(true);
     }
 

@@ -57,7 +57,7 @@ public class BlpImportController extends AbstractController {
     
     String resultLog = "Noch kein Upload gestartet";
 
-    @RequestMapping(value = { "/iplug-pages/excelUpload.html" }, method = RequestMethod.GET)
+    @RequestMapping(value = { "/iplug-pages/welcome.html", "/iplug-pages/excelUpload.html" }, method = RequestMethod.GET)
     public String showBlpImport(@ModelAttribute("uploadBean") final UploadBean uploadBean, final ModelMap modelMap, HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject) throws Exception {
         return AdminViews.EXCEL_UPLOAD;

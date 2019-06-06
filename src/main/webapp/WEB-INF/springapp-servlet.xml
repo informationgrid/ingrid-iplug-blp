@@ -112,6 +112,7 @@
   <context:component-scan base-package="de.ingrid">
     <context:exclude-filter type="regex" expression="de.ingrid.admin.object.DefaultDataType"/>
     <context:exclude-filter type="regex" expression="de.ingrid.admin.object.BasePlug"/>
+    <context:exclude-filter type="regex" expression="de.ingrid.admin.controller.RedirectController"/>
   </context:component-scan>
 
   <mvc:annotation-driven/>
