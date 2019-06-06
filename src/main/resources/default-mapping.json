@@ -44,6 +44,30 @@
       "type": "text",
       "store": true
     },
+    "blp_url_in_progress": {
+      "type": "text",
+      "store": true
+    },
+    "blp_url_finished": {
+      "type": "text",
+      "store": true
+    },
+    "fnp_url_in_progress": {
+      "type": "text",
+      "store": true
+    },
+    "fnp_url_finished": {
+      "type": "text",
+      "store": true
+    },
+    "bp_url_in_progress": {
+      "type": "text",
+      "store": true
+    },
+    "bp_url_finished": {
+      "type": "text",
+      "store": true
+    },
     "x1": {
       "type": "double",
       "store": true
