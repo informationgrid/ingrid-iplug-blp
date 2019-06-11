@@ -55,11 +55,12 @@ import de.ingrid.iplug.dsc.utils.UVPDataImporter;
 @SessionAttributes("plugDescription")
 public class BlpImportController extends AbstractController {
     
-    String resultLog = "Noch kein Upload gestartet";
+    String resultLog = "Noch kein Upload gestartet.";
 
     @RequestMapping(value = { "/iplug-pages/welcome.html", "/iplug-pages/excelUpload.html" }, method = RequestMethod.GET)
     public String showBlpImport(@ModelAttribute("uploadBean") final UploadBean uploadBean, final ModelMap modelMap, HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject) throws Exception {
+        modelMap.addAttribute( "resultLog", getResultLog());
         return AdminViews.EXCEL_UPLOAD;
     }
 
@@ -72,7 +73,9 @@ public class BlpImportController extends AbstractController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST)
-    public String upload(@ModelAttribute("uploadBean") final UploadBean uploadBean, final Model model, @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject)
+    public String upload(@ModelAttribute("uploadBean") final UploadBean uploadBean, 
+            final Model model, 
+            @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject)
             throws IOException {
 
         MultipartFile uploadedFile = uploadBean.getFile();
@@ -93,10 +96,9 @@ public class BlpImportController extends AbstractController {
         resultLog = importer.analyzeExcelFile();
         System.out.println( resultLog );
         
-        return "redirect:/iplug-pages/excelUpload.html";
+        return redirect("/iplug-pages/excelUpload.html");
     }
     
-    @ModelAttribute("resultLog")
     public String getResultLog() throws UnsupportedEncodingException {
         return resultLog.replaceAll( "\n", "<br>");
     }
@@ -108,7 +110,7 @@ public class BlpImportController extends AbstractController {
     }
 
     private void createWarningFile(File directory) throws IOException {
-        Files.write( new File( directory, "READ_ME" ).toPath(), "Warning!  All files in here will be deleted when a new Excelfile is uploaded!!!".getBytes(), StandardOpenOption.CREATE );
+        Files.write( new File( directory, "READ_ME" ).toPath(), "Warning! All files in here will be deleted when a new Excelfile is uploaded!!!".getBytes(), StandardOpenOption.CREATE );
     }
 
 }

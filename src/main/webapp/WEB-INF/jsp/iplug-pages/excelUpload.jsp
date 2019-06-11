@@ -72,6 +72,13 @@
 				href="../base/welcome.html">Abbrechen</a> <a
 				href="../base/save.html">Weiter</a>
 		</div>
+		<div class="controls cBottom">
+			<a href="#"
+				onclick="document.getElementById('uploadBean').submit();">Upload</a><a
+				href="../base/provider.html">Zur&uuml;ck</a> <a
+				href="../base/welcome.html">Abbrechen</a> <a
+				href="../base/save.html">Weiter</a>
+		</div>
 		<div id="content">
 			<h2>Wählen Sie eine Excel Datei aus, die Sie indizieren möchten:</h2>
 			<div class="hint" onclick="$('#filterComment').toggle()">
@@ -89,22 +96,20 @@
 					<row> <form:form action="../iplug-pages/excelUpload.html"
 						enctype="multipart/form-data" modelAttribute="uploadBean">
 
-						<row> <label> Excel Datei: </label> <field>
-						<div class="input full">
-							<input type="file" name="file" />
-							<form:errors path="file" cssClass="error" element="div" />
-						</div>
-						</field> <desc></desc> </row>
+						<row> 
+						  <label> Excel Datei: </label> 
+						  <field>
+							<div class="full">
+							 <div class="input" style="width: 80%; float:left;">
+							     <input type="file" name="file" style="width: 100%" />
+							     <form:errors path="file" cssClass="error" element="div" />
+							 </div>
+							 <div style="width: 19%;float: right;">
+							     <button href="#" onclick="document.getElementById('uploadBean').submit();" style="width: 100%;">Upload</button>
+							 </div>
+							</div>
+						  </field> <desc></desc> </row>
 					</form:form> </row>
-					<row>
-					<div class="controls cBottom">
-						<a href="#"
-							onclick="document.getElementById('uploadBean').submit();">Upload</a><a
-							href="../base/provider.html">Zur&uuml;ck</a> <a
-							href="../base/welcome.html">Abbrechen</a> <a
-							href="../base/save.html">Weiter</a>
-					</div>
-					</row>
 			</fieldset>
 
 			<fieldset id="statusContainer">
