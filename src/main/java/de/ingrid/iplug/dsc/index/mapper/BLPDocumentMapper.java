@@ -82,7 +82,6 @@ public class BLPDocumentMapper implements IRecordMapper {
 
         doc.put( "title", "Bauleitplanung: " + model.name );
         // doc.put( "summary", model.descr );
-        doc.put( "partner", (String) record.get( BLPSourceRecord.ORGANISATION ) );
 
         doc.put( "blp_name", model.name );
         doc.put( "blp_description", model.descr );
@@ -131,7 +130,6 @@ public class BLPDocumentMapper implements IRecordMapper {
         doc.put( "additional_html_1", additionalHtml );
 
         // constants
-        doc.put( "datatype", "www" );
         doc.put( "blp_marker", "blp_marker" );
         doc.put( "procedure", "dev_plan" );
         doc.put( "lang", "de" );
