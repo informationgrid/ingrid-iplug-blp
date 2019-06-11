@@ -32,7 +32,10 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import de.ingrid.admin.elasticsearch.StatusProvider;
+import de.ingrid.admin.elasticsearch.StatusProvider.Classification;
 import de.ingrid.iplug.dsc.om.BLPSourceRecord;
 import de.ingrid.iplug.dsc.om.SourceRecord;
 import de.ingrid.iplug.dsc.utils.UVPDataImporter;
@@ -53,6 +56,9 @@ import de.ingrid.utils.PlugDescription;
 // Bean created depending on SpringConfiguration
 // @Service
 public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
+    
+    @Autowired
+    private StatusProvider statusProvider;
 
     Iterator<BlpModel> recordIterator = null;
     private int numRecords;
@@ -72,7 +78,7 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
      * @see de.ingrid.iplug.dsc.index.IRecordProducer#hasNext()
      */
     @Override
-    public boolean hasNext() {
+    public boolean hasNext() throws Exception {
         if (recordIterator == null) {
             createBLPRecordsFromExcelFile();
         }
@@ -103,7 +109,7 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
         return new BLPSourceRecord( recordIterator.next(), organisation );
     }
 
-    private void createBLPRecordsFromExcelFile() {
+    private void createBLPRecordsFromExcelFile() throws Exception {
         try {
             List<BlpModel> blpRecords = UVPDataImporter.getValidModels( getExcelFile() );
             if (log.isDebugEnabled()) {
@@ -114,6 +120,8 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
             numRecords = blpRecords.size();
         } catch (Exception e) {
             log.error( "Error creating records.", e );
+            statusProvider.addState( "ERROR", "Excel file was not found. Did you upload it?", Classification.ERROR );
+            throw e;
         }
     }
 

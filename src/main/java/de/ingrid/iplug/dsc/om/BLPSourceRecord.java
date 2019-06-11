@@ -40,10 +40,6 @@ public class BLPSourceRecord extends SourceRecord {
 
     private static final long serialVersionUID = 2466131851010594486L;
 
-    public static final String PRE_TEMPLATE = "pre_template";
-    public static final String LINK_TEMPLATE = "link_template";
-    public static final String POST_TEMPLATE = "post_template";
-
     public static final String INDEX_DOCUMENT = "idxDoc";
 
     public static final String BLP_MODEL = "blpModel";
@@ -61,9 +57,6 @@ public class BLPSourceRecord extends SourceRecord {
         super( UUID.randomUUID().toString() );
         this.put( BLP_MODEL, blpModel );
         this.put( ORGANISATION, organisation );
-        this.put( PRE_TEMPLATE, "%s" );
-        this.put( LINK_TEMPLATE, "%s%s" );
-        this.put( POST_TEMPLATE, "");
     }
 
     /**
@@ -79,14 +72,6 @@ public class BLPSourceRecord extends SourceRecord {
         this.put( BLP_MODEL, blpModel );
         this.put( ORGANISATION, organisation );
         this.put( INDEX_DOCUMENT, idxDoc );
-        this.put( PRE_TEMPLATE, "%s" );
-        this.put( LINK_TEMPLATE, "%s%s" );
-        this.put( POST_TEMPLATE, "");
     }
 
-    public void setTemplates(String pre_template, String link_template, String post_template) {
-        this.put( PRE_TEMPLATE, pre_template );
-        this.put( LINK_TEMPLATE, link_template );
-        this.put( POST_TEMPLATE, post_template );
-    }
 }
