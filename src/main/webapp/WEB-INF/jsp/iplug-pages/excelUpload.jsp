@@ -7,12 +7,12 @@
   Licensed under the EUPL, Version 1.1 or – as soon they will be
   approved by the European Commission - subsequent versions of the
   EUPL (the "Licence");
-  
+
   You may not use this work except in compliance with the Licence.
   You may obtain a copy of the Licence at:
-  
+
   http://ec.europa.eu/idabc/eupl5
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the Licence is distributed on an "AS IS" basis,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,27 +67,26 @@
 	<div id="contentBox" class="contentMiddle">
 		<h1 id="head">Datei Upload</h1>
 		<div class="controls">
-			<a href="#" onclick="document.getElementById('uploadBean').submit();">Upload</a><a
-				href="../base/provider.html">Zur&uuml;ck</a> <a
+			<a href="../base/provider.html">Zur&uuml;ck</a> <a
 				href="../base/welcome.html">Abbrechen</a> <a
 				href="../base/save.html">Weiter</a>
 		</div>
 		<div class="controls cBottom">
-			<a href="#"
-				onclick="document.getElementById('uploadBean').submit();">Upload</a><a
-				href="../base/provider.html">Zur&uuml;ck</a> <a
+			<a href="../base/provider.html">Zur&uuml;ck</a> <a
 				href="../base/welcome.html">Abbrechen</a> <a
 				href="../base/save.html">Weiter</a>
 		</div>
 		<div id="content">
 			<h2>Wählen Sie eine Excel Datei aus, die Sie indizieren möchten:</h2>
 			<div class="hint" onclick="$('#filterComment').toggle()">
-				<span class="ui-icon ui-icon-arrow-1-e"></span>Hinweise
+				<a>&#8594;Hinweise</a>
 			</div>
 			<div id="filterComment" class="comment" style="display: none;">
 				<ul>
-					<li>Alle dargestellt.</li>
-				</ul>
+          <li>Eine bereits bestehende Excel-Datei wird bei einem Upload gelöscht.</li>
+          <li>Sollte es Fehler während des Imports geben, werden diese unter "Status" angezeigt, sodass das Excelfile entsprechend korrigiert werden kann.</li>
+          <li>Nach dem erfolgreichen Upload, muss unter "Indexieren" neu indiziert werden.</li>
+        </ul>
 			</div>
 
 			<fieldset>
@@ -96,8 +95,8 @@
 					<row> <form:form action="../iplug-pages/excelUpload.html"
 						enctype="multipart/form-data" modelAttribute="uploadBean">
 
-						<row> 
-						  <label> Excel Datei: </label> 
+						<row>
+						  <label> Excel Datei: </label>
 						  <field>
 							<div class="full">
 							 <div class="input" style="width: 80%; float:left;">
@@ -127,4 +126,3 @@
 		<div id="footer" style="height: 100px; width: 90%"></div>
 </body>
 </html>
-
