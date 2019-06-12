@@ -80,11 +80,11 @@ public class BLPDocumentMapper implements IRecordMapper {
 
         BlpModel model = (BlpModel) record.get( BLPSourceRecord.BLP_MODEL );
 
-        doc.put( "title", "Bauleitplanung: " + model.name );
-        // doc.put( "summary", model.descr );
+        addToDoc(doc, "title", "Bauleitplanung: " + model.name );
+        // addToDoc(doc, "summary", model.descr );
 
-        doc.put( "blp_name", model.name );
-        doc.put( "blp_description", model.descr );
+        addToDoc(doc, "blp_name", model.name );
+        addToDoc(doc, "blp_description", model.descr );
         doc.put( "x1", model.lon );
         doc.put( "x2", model.lon );
         doc.put( "y1", model.lat );
@@ -92,27 +92,27 @@ public class BLPDocumentMapper implements IRecordMapper {
 
         ArrayList<Link> links = new ArrayList<>();
         if (model.urlBlpInProgress != null) {
-            doc.put( "blp_url_in_progress", model.urlBlpInProgress );
+            addToDoc(doc, "blp_url_in_progress", model.urlBlpInProgress );
             links.add( new Link( model.urlBlpInProgress, "Bauleitpläne im Beteiligungsverfahren" ) );
         }
         if (model.urlBlpFinished != null) {
-            doc.put( "blp_url_finished", model.urlBlpFinished );
+            addToDoc(doc, "blp_url_finished", model.urlBlpFinished );
             links.add( new Link( model.urlBlpFinished, "Wirksame/rechtskräftige Bauleitpläne" ) );
         }
         if (model.urlFnpInProgress != null) {
-            doc.put( "fnp_url_in_progress", model.urlFnpInProgress );
+            addToDoc(doc, "fnp_url_in_progress", model.urlFnpInProgress );
             links.add( new Link( model.urlFnpInProgress, "Flächennutzungspläne im Beteiligungsverfahren" ) );
         }
         if (model.urlFnpFinished != null) {
-            doc.put( "fnp_url_finished", model.urlFnpFinished );
+            addToDoc(doc, "fnp_url_finished", model.urlFnpFinished );
             links.add( new Link( model.urlFnpFinished, "Wirksame/rechtskräftige Flächennutzungspläne" ) );
         }
         if (model.urlBpInProgress != null) {
-            doc.put( "bp_url_in_progress", model.urlBpInProgress );
+            addToDoc(doc, "bp_url_in_progress", model.urlBpInProgress );
             links.add( new Link( model.urlBpInProgress, "Bebauungspläne im Beteiligungsverfahren" ) );
         }
         if (model.urlBpFinished != null) {
-            doc.put( "bp_url_finished", model.urlBpFinished );
+            addToDoc(doc, "bp_url_finished", model.urlBpFinished );
             links.add( new Link( model.urlBpFinished, "Wirksame/rechtskräftige Bebauungspläne" ) );
         }
 
@@ -127,12 +127,29 @@ public class BLPDocumentMapper implements IRecordMapper {
         temp.process( root, out );
         String additionalHtml = out.toString();
 
-        doc.put( "additional_html_1", additionalHtml );
+        addToDoc(doc, "additional_html_1", additionalHtml );
 
         // constants
-        doc.put( "blp_marker", "blp_marker" );
-        doc.put( "procedure", "dev_plan" );
-        doc.put( "lang", "de" );
+        addToDoc(doc, "blp_marker", "blp_marker" );
+        addToDoc(doc, "procedure", "dev_plan" );
+        addToDoc(doc, "lang", "de" );
+
+    }
+
+    public void addToDoc(ElasticDocument doc, String fieldName, String value) {
+        addToDoc(doc, fieldName, value, true);
+    }
+
+    public void addToDoc(ElasticDocument doc, String fieldName, String value, boolean analyzed) {
+        if (value == null) {
+            value = "";
+        }
+
+        fieldName = fieldName.toLowerCase();
+        doc.put(fieldName, value);
+        if (analyzed && !value.isEmpty()) {
+            doc.put("content", value);
+        }
 
     }
 }
