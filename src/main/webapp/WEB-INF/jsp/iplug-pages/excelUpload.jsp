@@ -36,7 +36,37 @@
 <link rel="StyleSheet" href="../css/base/portal_u.css" type="text/css"
 	media="all" />
 <script type="text/javascript" src="../js/base/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript">
+      function checkState() {
+          $.ajax( "../rest/uploadStatus", {
+              type: "GET",
+              contentType: 'application/json',
+              success: function(data) {
+                  if (data == "") {
+                      $("#importInfo").html( "Es läuft zur Zeit kein Import." );
+                      setTimeout( checkState, 60000 );
+                      return;
+                  } else if (data.indexOf("Datei hochgeladen") != -1) {
+                      $("#importInfo").html( data );
+                      // repeat execution every 60s
+                      setTimeout( checkState, 60000 );
+                      return;
+                  }
+                  $("#importInfo").html( data );
 
+
+                  // repeat execution every 3s until finished
+                  setTimeout( checkState, 3000 );
+              },
+              error: function(jqXHR, text, error) {
+                  // if it's not a real error, but just saying, that no process is running
+                  $("#importInfo").html( "Es trat ein Fehler beim Laden des Logs auf. " );
+                  console.error( error, jqXHR );
+              }
+          });
+      }
+      checkState();
+      </script>
 </head>
 <body>
 	<div id="header">
@@ -114,10 +144,6 @@
 			<fieldset id="statusContainer">
 				<legend>Status</legend>
 				<div id="importInfo" class="space"></div>
-				<div id="allInfo">
-					<div id="statusContent">
-						<p>${resultLog}</p>
-					</div>
 				</div>
 			</fieldset>
 

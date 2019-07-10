@@ -56,7 +56,7 @@ import de.ingrid.utils.PlugDescription;
 // Bean created depending on SpringConfiguration
 // @Service
 public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
-    
+
     @Autowired
     private StatusProvider statusProvider;
 
@@ -111,7 +111,8 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
 
     private void createBLPRecordsFromExcelFile() throws Exception {
         try {
-            List<BlpModel> blpRecords = UVPDataImporter.getValidModels( getExcelFile() );
+            UVPDataImporter importer = new UVPDataImporter( getExcelFile() );
+            List<BlpModel> blpRecords = importer.getValidModels();
             if (log.isDebugEnabled()) {
                 log.debug( "Found records: " + blpRecords.size() );
             }
@@ -132,14 +133,14 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
 
     public File getExcelFile() throws FileNotFoundException {
         if (excelFile == null) {
-            File dataDir = new File(workingDir, "data");
-            for(File f : dataDir.listFiles()) {
+            File dataDir = new File( workingDir, "data" );
+            for (File f : dataDir.listFiles()) {
                 String name = f.getName().toLowerCase();
-                if(name.endsWith( ".xls") || name.endsWith( ".xlsx" )) {
+                if (name.endsWith( ".xls" ) || name.endsWith( ".xlsx" )) {
                     return f;
                 }
             }
-            throw new FileNotFoundException(String.format( "No Excel file found in '%s'" , dataDir.toString()));
+            throw new FileNotFoundException( String.format( "No Excel file found in '%s'", dataDir.toString() ) );
         }
         return excelFile;
     }

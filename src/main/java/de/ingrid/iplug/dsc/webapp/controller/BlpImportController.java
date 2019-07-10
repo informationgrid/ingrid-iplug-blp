@@ -24,13 +24,14 @@ package de.ingrid.iplug.dsc.webapp.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -54,14 +55,21 @@ import de.ingrid.iplug.dsc.utils.UVPDataImporter;
 @Controller
 @SessionAttributes("plugDescription")
 public class BlpImportController extends AbstractController {
-    
-    String resultLog = "Noch kein Upload gestartet.";
+
+    UVPDataImporter importer;
 
     @RequestMapping(value = { "/iplug-pages/welcome.html", "/iplug-pages/excelUpload.html" }, method = RequestMethod.GET)
     public String showBlpImport(@ModelAttribute("uploadBean") final UploadBean uploadBean, final ModelMap modelMap, HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject) throws Exception {
-        modelMap.addAttribute( "resultLog", getResultLog());
         return AdminViews.EXCEL_UPLOAD;
+    }
+
+    @RequestMapping(value = { "/uploadStatus" }, method = RequestMethod.GET)
+    public ResponseEntity<String> getStatusBlpImport(HttpServletRequest request, HttpServletResponse response) {
+        String status = "Kein Import gestarted.";
+        if (importer != null)
+            status = importer.getImportReport();
+        return new ResponseEntity<String>( status.replaceAll( "\n", "<br>" ), HttpStatus.OK );
     }
 
     /**
@@ -73,9 +81,7 @@ public class BlpImportController extends AbstractController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST)
-    public String upload(@ModelAttribute("uploadBean") final UploadBean uploadBean, 
-            final Model model, 
-            @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject)
+    public String upload(@ModelAttribute("uploadBean") final UploadBean uploadBean, final Model model, @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject)
             throws IOException {
 
         MultipartFile uploadedFile = uploadBean.getFile();
@@ -92,15 +98,12 @@ public class BlpImportController extends AbstractController {
         File xlsFile = new File( dataDir, uploadedFile.getOriginalFilename() );
         Files.write( xlsFile.toPath(), uploadedFile.getBytes(), StandardOpenOption.CREATE );
 
-        UVPDataImporter importer = new UVPDataImporter( xlsFile );
-        resultLog = importer.analyzeExcelFile();
-        System.out.println( resultLog );
-        
-        return redirect("/iplug-pages/excelUpload.html");
-    }
-    
-    public String getResultLog() throws UnsupportedEncodingException {
-        return resultLog.replaceAll( "\n", "<br>");
+        importer = new UVPDataImporter( xlsFile );
+        new Thread( importer ).start();
+        // resultLog = importer.analyzeExcelFile();
+        // System.out.println( resultLog );
+
+        return redirect( "/iplug-pages/excelUpload.html" );
     }
 
     private void deleteAllFilesInDirectory(File directory) {

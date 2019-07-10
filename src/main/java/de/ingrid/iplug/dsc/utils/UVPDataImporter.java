@@ -91,10 +91,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author joachim@wemove.com
  */
-public class UVPDataImporter {
+public class UVPDataImporter implements Runnable {
 
     private File excelFile;
     private InputStream excelFileInputStream;
+
+    private String importReport = "";
 
     public UVPDataImporter(File excelFile) {
         this.excelFile = excelFile;
@@ -123,7 +125,7 @@ public class UVPDataImporter {
      * @return
      * @throws IOException
      */
-    public static List<BlpModel> readData(File excelFile) throws IOException {
+    public List<BlpModel> readData(File excelFile) throws IOException {
         FileInputStream inputStream = new FileInputStream( excelFile );
         return readData( inputStream, excelFile.getName() );
     }
@@ -136,7 +138,7 @@ public class UVPDataImporter {
      * @return
      * @throws IOException
      */
-    public static List<BlpModel> readData(InputStream inputStream, String excelFile) throws IOException {
+    public List<BlpModel> readData(InputStream inputStream, String excelFile) throws IOException {
         List<BlpModel> blpModels = new ArrayList<BlpModel>();
 
         Workbook workbook = null;
@@ -388,19 +390,23 @@ public class UVPDataImporter {
     }
 
     public String analyzeExcelFile() throws IOException {
-        String logString = "";
+        importReport = "Datei wird eingelesen ...";
         String errors = "";
         List<BlpModel> models;
         try {
             models = readData();
         } catch (Exception e) {
-            return "Error: " + e.getMessage();
+            importReport = "Error: " + e.getMessage();
+            return importReport;
         }
-
+        importReport = "Datei wird eingelesen ... fertig\n";
+        importReport += String.format( "Analysiere URLs von %d Einträgen...\n", models.size() );
         int ignoredModels = 0;
         int modelsWithErrors = 0;
         int total = models.size();
-        for (BlpModel model : models) {
+        String preChecks = importReport;
+        for (int i = 0; i < models.size(); i++) {
+            BlpModel model = models.get( i );
             checkUrls( model );
 
             if (model.isIgnored())
@@ -413,20 +419,26 @@ public class UVPDataImporter {
                 }
                 errors += "\n";
             }
+            importReport = String.format( "%s Fortschritt: %d von %d Einträge analysiert.", preChecks, i+1, models.size() );
         }
+        importReport += "\n\n\n";
         if (ignoredModels < 1) {
-            logString = String.format( "Excel Datei hochgeladen. Es wurden alle %d Einträge erfolgreich validiert.", total );
+            importReport += String.format( "Excel Datei hochgeladen. Es wurden alle %d Einträge erfolgreich validiert.", total );
             if (modelsWithErrors > 0) {
-                logString += String.format( " Bei %d Einträgen kam es zu Warnungen: \n\n %s", modelsWithErrors, errors );
+                importReport += String.format( " Bei %d Einträgen kam es zu Warnungen: \n\n %s", modelsWithErrors, errors );
             }
         } else {
-            logString = String.format( "Excel Datei hochgeladen. Es wurden %d von %d Einträgen erfolgreich validiert. %d Einträge werden ignoriert. Bei %d Einträgen kam es zu Warnungen: \n\n %s",
+            importReport += String.format( "Excel Datei hochgeladen. Es wurden %d von %d Einträgen erfolgreich validiert. %d Einträge werden ignoriert. Bei %d Einträgen kam es zu Warnungen: \n\n %s",
                     total - ignoredModels, total, ignoredModels, modelsWithErrors, errors );
         }
-        return logString;
+        return importReport;
     }
 
-    public static List<BlpModel> getValidModels(File excelFile) throws IOException {
+    public List<BlpModel> getValidModels() throws IOException {
+        return getValidModels( this.getExcelFile() );
+    }
+
+    public List<BlpModel> getValidModels(File excelFile) throws IOException {
         List<BlpModel> models = readData( excelFile );
         List<BlpModel> validModels = new ArrayList<>();
         for (BlpModel model : models) {
@@ -609,6 +621,21 @@ public class UVPDataImporter {
         } else {
             return urlString.substring( 0, urlString.lastIndexOf( "/", urlString.lastIndexOf( "/" ) - 1 ) ).concat( "/" );
         }
+    }
+
+    @Override
+    public void run() {
+        try {
+            analyzeExcelFile();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    public String getImportReport() {
+        return this.importReport;
     }
 
 }

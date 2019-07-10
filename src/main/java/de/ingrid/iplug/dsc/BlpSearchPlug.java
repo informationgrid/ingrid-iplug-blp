@@ -33,7 +33,6 @@ import de.ingrid.elasticsearch.ElasticConfig;
 import de.ingrid.elasticsearch.IBusIndexManager;
 import de.ingrid.elasticsearch.search.IndexImpl;
 import de.ingrid.iplug.HeartBeatPlug;
-import de.ingrid.iplug.IPlugdescriptionFieldFilter;
 import de.ingrid.iplug.PlugDescriptionFieldFilters;
 import de.ingrid.utils.IRecordLoader;
 import de.ingrid.utils.IngridCall;
@@ -72,8 +71,7 @@ public class BlpSearchPlug extends HeartBeatPlug implements IRecordLoader {
     private final IndexScheduler indexScheduler;
 
     @Autowired
-    public BlpSearchPlug(final IndexImpl indexSearcher, IMetadataInjector[] injector, IPreProcessor[] preProcessors, IPostProcessor[] postProcessors,
-            IndexScheduler indexScheduler) {
+    public BlpSearchPlug(final IndexImpl indexSearcher, IMetadataInjector[] injector, IPreProcessor[] preProcessors, IPostProcessor[] postProcessors, IndexScheduler indexScheduler) {
         super( 60000, new PlugDescriptionFieldFilters(), injector, preProcessors, postProcessors );
         _indexSearcher = indexSearcher;
         this.indexScheduler = indexScheduler;
