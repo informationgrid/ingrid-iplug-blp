@@ -26,10 +26,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -43,6 +45,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import de.ingrid.admin.command.PlugdescriptionCommandObject;
 import de.ingrid.admin.controller.AbstractController;
+import de.ingrid.utils.statusprovider.StatusProvider;
+import de.ingrid.utils.statusprovider.StatusProvider.State;
+import de.ingrid.utils.statusprovider.StatusProviderService;
 import de.ingrid.iplug.dsc.UploadBean;
 import de.ingrid.iplug.dsc.utils.UVPDataImporter;
 
@@ -56,6 +61,9 @@ import de.ingrid.iplug.dsc.utils.UVPDataImporter;
 @SessionAttributes("plugDescription")
 public class BlpImportController extends AbstractController {
 
+    @Autowired
+    public StatusProviderService statusProviderService;
+
     UVPDataImporter importer;
 
     @RequestMapping(value = { "/iplug-pages/welcome.html", "/iplug-pages/excelUpload.html" }, method = RequestMethod.GET)
@@ -65,11 +73,8 @@ public class BlpImportController extends AbstractController {
     }
 
     @RequestMapping(value = { "/uploadStatus" }, method = RequestMethod.GET)
-    public ResponseEntity<String> getStatusBlpImport(HttpServletRequest request, HttpServletResponse response) {
-        String status = "Kein Import gestarted.";
-        if (importer != null)
-            status = importer.getImportReport();
-        return new ResponseEntity<String>( status.replaceAll( "\n", "<br>" ), HttpStatus.OK );
+    public ResponseEntity<Collection<State>> getStatusBlpImport(HttpServletRequest request, HttpServletResponse response) {
+        return new ResponseEntity<Collection<State>>( statusProviderService.getStatusProvider( "import" ).getStates(), HttpStatus.OK );
     }
 
     /**
@@ -99,9 +104,10 @@ public class BlpImportController extends AbstractController {
         Files.write( xlsFile.toPath(), uploadedFile.getBytes(), StandardOpenOption.CREATE );
 
         importer = new UVPDataImporter( xlsFile );
+        StatusProvider statusProvider = statusProviderService.getStatusProvider( "import" );
+        statusProvider.clear();
+        importer.setStatusProvider( statusProvider );
         new Thread( importer ).start();
-        // resultLog = importer.analyzeExcelFile();
-        // System.out.println( resultLog );
 
         return redirect( "/iplug-pages/excelUpload.html" );
     }

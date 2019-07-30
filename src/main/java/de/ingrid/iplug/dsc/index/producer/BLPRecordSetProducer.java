@@ -34,8 +34,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.ingrid.admin.elasticsearch.StatusProvider;
-import de.ingrid.admin.elasticsearch.StatusProvider.Classification;
+import de.ingrid.utils.statusprovider.StatusProvider;
+import de.ingrid.utils.statusprovider.StatusProvider.Classification;
+import de.ingrid.utils.statusprovider.StatusProviderService;
 import de.ingrid.iplug.dsc.om.BLPSourceRecord;
 import de.ingrid.iplug.dsc.om.SourceRecord;
 import de.ingrid.iplug.dsc.utils.UVPDataImporter;
@@ -57,7 +58,6 @@ import de.ingrid.utils.PlugDescription;
 // @Service
 public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
 
-    @Autowired
     private StatusProvider statusProvider;
 
     Iterator<BlpModel> recordIterator = null;
@@ -68,7 +68,9 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
 
     final private static Log log = LogFactory.getLog( BLPRecordSetProducer.class );
 
-    public BLPRecordSetProducer() {
+    @Autowired
+    public BLPRecordSetProducer(StatusProviderService statusProviderService) {
+        this.statusProvider = statusProviderService.getDefaultStatusProvider();
         log.info( "BLPRecordSetProducer started." );
     }
 

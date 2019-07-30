@@ -37,6 +37,10 @@
 	media="all" />
 <script type="text/javascript" src="../js/base/jquery-1.8.0.min.js"></script>
     <script type="text/javascript">
+    $(document).ready(function () {
+        checkState();
+      });
+    
       function checkState() {
           $.ajax( "../rest/uploadStatus", {
               type: "GET",
@@ -46,13 +50,14 @@
                       $("#importInfo").html( "Es läuft zur Zeit kein Import." );
                       setTimeout( checkState, 60000 );
                       return;
-                  } else if (data.indexOf("Datei hochgeladen") != -1) {
+                  } else if (data.some(function(item) { return item.key === "FINISHED" || item.key === "ERROR" || item.key === "ABORT" })) {
                       $("#importInfo").html( data );
                       // repeat execution every 60s
                       setTimeout( checkState, 60000 );
                       return;
                   }
-                  $("#importInfo").html( data );
+                  setLog( data );
+                  //$("#importInfo").html( data );
 
 
                   // repeat execution every 3s until finished
@@ -65,6 +70,28 @@
               }
           });
       }
+      var formatTime = function(ts) {
+          var date = new Date(ts);
+          var d = date.getDate();
+          var m = date.getMonth() + 1;
+          var y = date.getFullYear();
+          var time = date.toTimeString().substring(0, 8);
+          return '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d) + ' ' + time;
+        };
+
+        function setLog(data) {
+
+          // fill div with data from content
+          var content = "";
+          for (var i=0; i < data.length; i++) {
+            var row = data[i];
+            if (row.value) {
+              content += "<div class='" + row.classification.toLowerCase() + "'>" + formatTime(row.time) + " - [" + row.classification + "] " + row.value + "</div>";
+            }
+          }
+
+          $("#importInfo").html( content );
+        }
       checkState();
       </script>
 </head>

@@ -35,6 +35,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import de.ingrid.admin.JettyStarter;
+import de.ingrid.utils.statusprovider.StatusProviderService;
 import de.ingrid.iplug.dsc.index.mapper.BLPDocumentMapper;
 import de.ingrid.iplug.dsc.index.mapper.IRecordMapper;
 import de.ingrid.iplug.dsc.index.producer.BLPRecordSetProducer;
@@ -49,7 +50,7 @@ public class SimpleBLPDocumentProducerTest {
     @Test
     public void testDscDocumentProducer() throws Exception {
 
-        BLPRecordSetProducer p = new BLPRecordSetProducer();
+        BLPRecordSetProducer p = new BLPRecordSetProducer(new StatusProviderService());
         p.setExcelFilename( "src/test/resources/blp-urls-test.xlsx" );
 
         BLPDocumentMapper m = new BLPDocumentMapper();

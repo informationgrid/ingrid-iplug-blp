@@ -49,6 +49,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import de.ingrid.utils.statusprovider.StatusProvider;
+import de.ingrid.utils.statusprovider.StatusProvider.Classification;
+
 /**
  * UVP data importer. Imports data from an excel file directly into the url
  * database.
@@ -92,6 +95,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author joachim@wemove.com
  */
 public class UVPDataImporter implements Runnable {
+
+    private StatusProvider statusProvider;
 
     private File excelFile;
     private InputStream excelFileInputStream;
@@ -390,21 +395,20 @@ public class UVPDataImporter implements Runnable {
     }
 
     public String analyzeExcelFile() throws IOException {
-        importReport = "Datei wird eingelesen ...";
+        logSp( "readFile", "Datei wird eingelesen ..." );
         String errors = "";
         List<BlpModel> models;
         try {
             models = readData();
         } catch (Exception e) {
-            importReport = "Error: " + e.getMessage();
+            logSp( "importERROR", "Error: " + e.getMessage(), Classification.ERROR);
             return importReport;
         }
-        importReport = "Datei wird eingelesen ... fertig\n";
-        importReport += String.format( "Analysiere URLs von %d Einträgen...\n", models.size() );
+        logSp( "readFile", "Datei wird eingelesen ... fertig\n" );
+        logSp( "totalEntries", String.format( "Analysiere URLs von %d Einträgen...", models.size() ) );
         int ignoredModels = 0;
         int modelsWithErrors = 0;
         int total = models.size();
-        String preChecks = importReport;
         for (int i = 0; i < models.size(); i++) {
             BlpModel model = models.get( i );
             checkUrls( model );
@@ -419,9 +423,8 @@ public class UVPDataImporter implements Runnable {
                 }
                 errors += "\n";
             }
-            importReport = String.format( "%s Fortschritt: %d von %d Einträge analysiert.", preChecks, i+1, models.size() );
+            logSp( "importProgress", String.format( "%d von %d Einträge analysiert.", i + 1, models.size() ) );
         }
-        importReport += "\n\n\n";
         if (ignoredModels < 1) {
             importReport += String.format( "Excel Datei hochgeladen. Es wurden alle %d Einträge erfolgreich validiert.", total );
             if (modelsWithErrors > 0) {
@@ -431,6 +434,9 @@ public class UVPDataImporter implements Runnable {
             importReport += String.format( "Excel Datei hochgeladen. Es wurden %d von %d Einträgen erfolgreich validiert. %d Einträge werden ignoriert. Bei %d Einträgen kam es zu Warnungen: \n\n %s",
                     total - ignoredModels, total, ignoredModels, modelsWithErrors, errors );
         }
+        logSp( "finished", "Fertig" );
+        logSp( "emptyInfo", " " );
+        logSp( "summary", importReport.replaceAll( "\n", "<br>" ) );
         return importReport;
     }
 
@@ -636,6 +642,23 @@ public class UVPDataImporter implements Runnable {
 
     public String getImportReport() {
         return this.importReport;
+    }
+
+    public StatusProvider getStatusProvider() {
+        return statusProvider;
+    }
+
+    public void setStatusProvider(StatusProvider statusProvider) {
+        this.statusProvider = statusProvider;
+    }
+
+    private void logSp(String key, String message) {
+        logSp( key, message, Classification.INFO );
+    }
+
+    private void logSp(String key, String message, Classification classification) {
+        if (this.statusProvider != null)
+            this.statusProvider.addState( key, message, classification );
     }
 
 }
