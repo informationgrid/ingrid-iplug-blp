@@ -44,6 +44,7 @@
       function checkState() {
           $.ajax( "../rest/uploadStatus", {
               type: "GET",
+              cache: false,
               contentType: 'application/json',
               success: function(data) {
                   if (data == "") {
