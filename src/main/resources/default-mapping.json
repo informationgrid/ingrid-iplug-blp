@@ -1,0 +1,88 @@
+{
+  "_source": {
+    "enabled": true
+  },
+  "properties": {
+    "iPlugId": {
+      "type": "keyword",
+      "store": true
+    },
+    "partner": {
+      "type": "keyword",
+      "store": true
+    },
+    "provider": {
+      "type": "keyword",
+      "store": true
+    },
+    "datatype": {
+      "type": "keyword",
+      "store": true
+    },
+    "dataSourceName": {
+      "type": "keyword",
+      "store": true
+    },
+
+    "additional_html_1": {
+      "type": "keyword",
+      "store": true
+    },
+    "title": {
+      "type": "text",
+      "store": true
+    },
+    "summary": {
+      "type": "text",
+      "store": true
+    },
+    "blp_name": {
+      "type": "text",
+      "store": true
+    },
+    "blp_description": {
+      "type": "text",
+      "store": true
+    },
+    "blp_url_in_progress": {
+      "type": "text",
+      "store": true
+    },
+    "blp_url_finished": {
+      "type": "text",
+      "store": true
+    },
+    "fnp_url_in_progress": {
+      "type": "text",
+      "store": true
+    },
+    "fnp_url_finished": {
+      "type": "text",
+      "store": true
+    },
+    "bp_url_in_progress": {
+      "type": "text",
+      "store": true
+    },
+    "bp_url_finished": {
+      "type": "text",
+      "store": true
+    },
+    "x1": {
+      "type": "double",
+      "store": true
+    },
+    "x2": {
+      "type": "double",
+      "store": true
+    },
+    "y1": {
+      "type": "double",
+      "store": true
+    },
+    "y2": {
+      "type": "double",
+      "store": true
+    }
+  }
+}

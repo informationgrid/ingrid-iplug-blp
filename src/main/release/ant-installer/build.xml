@@ -102,8 +102,6 @@ Bitte lesen Sie bzgl. der Administration die Kapitel unter
 Bevor das iPlug benutzt werden kann, muss es in der iBus-
 Administration (im Portal) eingeschaltet werden.
         </echo>
-
-        <runtarget target="showPatchErrors" />
     </target>
     
 </project>

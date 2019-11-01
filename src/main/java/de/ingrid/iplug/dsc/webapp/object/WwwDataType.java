@@ -1,6 +1,6 @@
 /*
  * **************************************************-
- * InGrid-iPlug DSC
+ * ingrid-iplug-se-iplug
  * ==================================================
  * Copyright (C) 2014 - 2019 wemove digital solutions GmbH
  * ==================================================
@@ -27,10 +27,10 @@ import org.springframework.stereotype.Service;
 import de.ingrid.admin.object.AbstractDataType;
 
 @Service
-public class BlpDataType extends AbstractDataType {
+public class WwwDataType extends AbstractDataType {
 
-    public BlpDataType() {
-        super("blp");
+    public WwwDataType() {
+        super("www");
         setForceActive(true);
     }
 

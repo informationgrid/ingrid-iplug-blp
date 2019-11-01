@@ -59,18 +59,30 @@
   <!-- Single parsers are injected explicitly (but created via annotation mechanism) -->
   <!-- Adapt number, type and order of parsers dependent from iPlug -->
 
-  <bean id="dscDocumentProducer" class="de.ingrid.iplug.dsc.index.DscDocumentProducer">
-    <property name="recordSetProducer" ref="recordSetProducer" />
-    <property name="recordMapperList">
-      <list>
-        <ref bean="recordMapper"/>
-      </list>
-    </property>
-  </bean>
+  <!-- CONNECT BEANS FOR READING EXCEL FILE AND MAPPING INTO INDEX -->
+    <bean id="dscDocumentProducer" class="de.ingrid.iplug.dsc.index.DscDocumentProducer">
+        <property name="recordSetProducer" ref="recordSetProducer" />
+        <property name="recordMapperList">
+            <list>
+                <!-- recordMapper is autowired de.ingrid.iplug.dsc.index.mapper.BLPDocumentMapper  -->
+                <ref bean="recordMapper"/>
+                <!-- PUT IDF ALSO INTO INDEX -->
+                <!-- <ref bean="idfProducerIndexMapper"/> -->
+            </list>
+        </property>
+        <property name="indexInfo" ref="indexInfo"/>
+    </bean>
+    
+    <!-- GENERAL INFO ABOUT INDEX -->
+    <bean id="indexInfo" class="de.ingrid.elasticsearch.IndexInfo">
+        <property name="toIndex" value="blp" />
+        <property name="toType" value="default" />
+        <property name="docIdField" value="id" />
+    </bean>
 
-  <bean id="indexInfo" class="de.ingrid.elasticsearch.IndexInfo">
-    <property name="toIndex" value="dsc"/>
-  </bean>
+    <!-- READ BLP EXCELFILE -->
+    <bean id="recordSetProducer" class="de.ingrid.iplug.dsc.index.producer.BLPRecordSetProducer">
+    </bean>
 
   <!--
       Defines a facet definition filter. Will be applied before a facet
@@ -97,6 +109,7 @@
   <context:component-scan base-package="de.ingrid">
     <context:exclude-filter type="regex" expression="de.ingrid.admin.object.DefaultDataType"/>
     <context:exclude-filter type="regex" expression="de.ingrid.admin.object.BasePlug"/>
+    <context:exclude-filter type="regex" expression="de.ingrid.admin.controller.RedirectController"/>
   </context:component-scan>
 
   <mvc:annotation-driven/>

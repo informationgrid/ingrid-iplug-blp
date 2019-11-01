@@ -1,6 +1,6 @@
-/*
+/*-
  * **************************************************-
- * InGrid-iPlug DSC
+ * InGrid iPlug BLP
  * ==================================================
  * Copyright (C) 2014 - 2019 wemove digital solutions GmbH
  * ==================================================
@@ -20,17 +20,32 @@
  * limitations under the Licence.
  * **************************************************#
  */
-package de.ingrid.iplug.dsc.webapp.object;
+package de.ingrid.iplug.dsc.utils;
 
-import org.springframework.stereotype.Service;
+public class Link {
+    
+    public Link(String url, String text) {
+        this.url = url;
+        this.text = text;
+    }
 
-import de.ingrid.admin.object.AbstractDataType;
+    private String url;
+    private String text;
 
-@Service
-public class AdressDataType extends AbstractDataType {
+    public String getUrl() {
+        return url;
+    }
 
-    public AdressDataType() {
-        super("dsc_ecs_address");
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
 }

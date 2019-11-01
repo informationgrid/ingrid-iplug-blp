@@ -32,7 +32,11 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import de.ingrid.utils.statusprovider.StatusProvider;
+import de.ingrid.utils.statusprovider.StatusProvider.Classification;
+import de.ingrid.utils.statusprovider.StatusProviderService;
 import de.ingrid.iplug.dsc.om.BLPSourceRecord;
 import de.ingrid.iplug.dsc.om.SourceRecord;
 import de.ingrid.iplug.dsc.utils.UVPDataImporter;
@@ -54,6 +58,8 @@ import de.ingrid.utils.PlugDescription;
 // @Service
 public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
 
+    private StatusProvider statusProvider;
+
     Iterator<BlpModel> recordIterator = null;
     private int numRecords;
     private File excelFile = null;
@@ -62,7 +68,9 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
 
     final private static Log log = LogFactory.getLog( BLPRecordSetProducer.class );
 
-    public BLPRecordSetProducer() {
+    @Autowired
+    public BLPRecordSetProducer(StatusProviderService statusProviderService) {
+        this.statusProvider = statusProviderService.getDefaultStatusProvider();
         log.info( "BLPRecordSetProducer started." );
     }
 
@@ -72,7 +80,7 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
      * @see de.ingrid.iplug.dsc.index.IRecordProducer#hasNext()
      */
     @Override
-    public boolean hasNext() {
+    public boolean hasNext() throws Exception {
         if (recordIterator == null) {
             createBLPRecordsFromExcelFile();
         }
@@ -103,9 +111,10 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
         return new BLPSourceRecord( recordIterator.next(), organisation );
     }
 
-    private void createBLPRecordsFromExcelFile() {
+    private void createBLPRecordsFromExcelFile() throws Exception {
         try {
-            List<BlpModel> blpRecords = UVPDataImporter.getValidModels( getExcelFile() );
+            UVPDataImporter importer = new UVPDataImporter( getExcelFile() );
+            List<BlpModel> blpRecords = importer.getValidModels();
             if (log.isDebugEnabled()) {
                 log.debug( "Found records: " + blpRecords.size() );
             }
@@ -114,6 +123,8 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
             numRecords = blpRecords.size();
         } catch (Exception e) {
             log.error( "Error creating records.", e );
+            statusProvider.addState( "ERROR", "Excel file was not found. Did you upload it?", Classification.ERROR );
+            throw e;
         }
     }
 
@@ -124,14 +135,14 @@ public class BLPRecordSetProducer implements IRecordSetProducer, IConfigurable {
 
     public File getExcelFile() throws FileNotFoundException {
         if (excelFile == null) {
-            File dataDir = new File(workingDir, "data");
-            for(File f : dataDir.listFiles()) {
+            File dataDir = new File( workingDir, "data" );
+            for (File f : dataDir.listFiles()) {
                 String name = f.getName().toLowerCase();
-                if(name.endsWith( ".xls") || name.endsWith( ".xlsx" )) {
+                if (name.endsWith( ".xls" ) || name.endsWith( ".xlsx" )) {
                     return f;
                 }
             }
-            throw new FileNotFoundException(String.format( "No Excel file found in '%s'" , dataDir.toString()));
+            throw new FileNotFoundException( String.format( "No Excel file found in '%s'", dataDir.toString() ) );
         }
         return excelFile;
     }

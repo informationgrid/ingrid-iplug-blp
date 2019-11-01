@@ -25,12 +25,45 @@
  */
 package de.ingrid.iplug.dsc.index.mapper;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import de.ingrid.admin.Config;
 import de.ingrid.iplug.dsc.om.BLPSourceRecord;
 import de.ingrid.iplug.dsc.om.SourceRecord;
+import de.ingrid.iplug.dsc.utils.Link;
 import de.ingrid.iplug.dsc.utils.UVPDataImporter.BlpModel;
 import de.ingrid.utils.ElasticDocument;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 
+@Service("recordMapper")
 public class BLPDocumentMapper implements IRecordMapper {
+
+    @Autowired
+    Config config;
+
+    Configuration freemarkerCfg;
+
+    public void createFreemarkerCfg() throws IOException {
+        if (freemarkerCfg == null) {
+            freemarkerCfg = new Configuration( Configuration.VERSION_2_3_27 );
+            freemarkerCfg.setClassForTemplateLoading( this.getClass(), "/" );
+            freemarkerCfg.setDefaultEncoding( "UTF-8" );
+            freemarkerCfg.setTemplateExceptionHandler( TemplateExceptionHandler.RETHROW_HANDLER );
+            freemarkerCfg.setLogTemplateExceptions( false );
+            freemarkerCfg.setWrapUncheckedExceptions( true );
+        }
+    }
 
     /*
      * (non-Javadoc)
@@ -40,72 +73,83 @@ public class BLPDocumentMapper implements IRecordMapper {
      * dsc.index.IRecord)
      */
     @Override
-    public void map(SourceRecord record, ElasticDocument doc) {
+    public void map(SourceRecord record, ElasticDocument doc) throws IOException, TemplateException {
         if (!(record instanceof BLPSourceRecord)) {
             throw new IllegalArgumentException( "Record is no BLPSourceRecord!" );
         }
 
         BlpModel model = (BlpModel) record.get( BLPSourceRecord.BLP_MODEL );
 
-        doc.put( "title", "Bauleitplanung: " + model.name );
-        // doc.put( "summary", model.descr );
-        doc.put( "partner", (String) record.get( BLPSourceRecord.ORGANISATION ) );
+        addToDoc(doc, "title", "Bauleitplanung: " + model.name );
+        // addToDoc(doc, "summary", model.descr );
 
-        doc.put( "blp_name", model.name );
-        doc.put( "blp_description", model.descr );
+        addToDoc(doc, "blp_name", model.name );
+        addToDoc(doc, "blp_description", model.descr );
         doc.put( "x1", model.lon );
         doc.put( "x2", model.lon );
         doc.put( "y1", model.lat );
         doc.put( "y2", model.lat );
 
-        String additionalHtml = "<div>";
-        String LINK_FORMAT = "<a href=\"%s\" class=\"icon\" target=\"_blank\">\n" +
-                "  <span class=\"ic-ic-arrow\"></span><span class=\"text\">%s</span>\n" +
-                "</a>";
-
-
-        if (model.descr != null) {
-            additionalHtml += String.format( "<p><b>Mitgliedsgemeinden:</b> %s</p>", model.descr );
-        }
-
-
-        additionalHtml += "<p>Nutzen Sie die folgenden Links um zu den Bauleitplanungs-Seiten zu gelangen:</p>"
-                + "<span class=\"link-list\">";
-
-
+        ArrayList<Link> links = new ArrayList<>();
         if (model.urlBlpInProgress != null) {
-            doc.put( "blp_url_in_progress", model.urlBlpInProgress );
-            additionalHtml += String.format( LINK_FORMAT, model.urlBlpInProgress, "Bauleitpläne im Beteiligungsverfahren" );
+            addToDoc(doc, "blp_url_in_progress", model.urlBlpInProgress );
+            links.add( new Link( model.urlBlpInProgress, "Bauleitpläne im Beteiligungsverfahren" ) );
         }
         if (model.urlBlpFinished != null) {
-            doc.put( "blp_url_finished", model.urlBlpFinished );
-            additionalHtml += String.format( LINK_FORMAT, model.urlBlpFinished, "Wirksame/rechtskräftige Bauleitpläne" );
+            addToDoc(doc, "blp_url_finished", model.urlBlpFinished );
+            links.add( new Link( model.urlBlpFinished, "Wirksame/rechtskräftige Bauleitpläne" ) );
         }
         if (model.urlFnpInProgress != null) {
-            doc.put( "fnp_url_in_progress", model.urlFnpInProgress );
-            additionalHtml += String.format( LINK_FORMAT, model.urlFnpInProgress, "Flächennutzungspläne im Beteiligungsverfahren" );
+            addToDoc(doc, "fnp_url_in_progress", model.urlFnpInProgress );
+            links.add( new Link( model.urlFnpInProgress, "Flächennutzungspläne im Beteiligungsverfahren" ) );
         }
         if (model.urlFnpFinished != null) {
-            doc.put( "fnp_url_finished", model.urlFnpFinished );
-            additionalHtml += String.format( LINK_FORMAT, model.urlFnpFinished, "Wirksame/rechtskräftige Flächennutzungspläne" );
+            addToDoc(doc, "fnp_url_finished", model.urlFnpFinished );
+            links.add( new Link( model.urlFnpFinished, "Wirksame/rechtskräftige Flächennutzungspläne" ) );
         }
         if (model.urlBpInProgress != null) {
-            doc.put( "bp_url_in_progress", model.urlBpInProgress );
-            additionalHtml += String.format( LINK_FORMAT, model.urlBpInProgress, "Bebauungspläne im Beteiligungsverfahren" );
+            addToDoc(doc, "bp_url_in_progress", model.urlBpInProgress );
+            links.add( new Link( model.urlBpInProgress, "Bebauungspläne im Beteiligungsverfahren" ) );
         }
         if (model.urlBpFinished != null) {
-            doc.put( "bp_url_finished", model.urlBpFinished );
-            additionalHtml += String.format( LINK_FORMAT, model.urlBpFinished, "Wirksame/rechtskräftige Bebauungspläne" );
+            addToDoc(doc, "bp_url_finished", model.urlBpFinished );
+            links.add( new Link( model.urlBpFinished, "Wirksame/rechtskräftige Bebauungspläne" ) );
         }
-        additionalHtml += "</span></div>";
 
-        doc.put( "additional_html_1", additionalHtml );
+        createFreemarkerCfg();
+        Template temp = freemarkerCfg.getTemplate( "additional_html.ftl" );
+
+        Map<String, Object> root = new HashMap<>();
+        root.put( "description", model.descr );
+        root.put( "links", links );
+
+        Writer out = new StringWriter();
+        temp.process( root, out );
+        String additionalHtml = out.toString();
+
+        addToDoc(doc, "additional_html_1", additionalHtml );
 
         // constants
-        doc.put( "datatype", "www" );
-        doc.put( "blp_marker", "blp_marker" );
-        doc.put( "procedure", "dev_plan" );
-        doc.put( "lang", "de" );
+        addToDoc(doc, "blp_marker", "blp_marker" );
+        addToDoc(doc, "procedure", "dev_plan" );
+        addToDoc(doc, "lang", "de" );
+
+    }
+
+    public void addToDoc(ElasticDocument doc, String fieldName, String value) {
+        addToDoc(doc, fieldName, value, true);
+    }
+
+    public void addToDoc(ElasticDocument doc, String fieldName, String value, boolean analyzed) {
+        if (value == null) {
+            value = "";
+        }
+
+        fieldName = fieldName.toLowerCase();
+        doc.put(fieldName, value);
+        if (analyzed && !value.isEmpty()) {
+            doc.put("content", value);
+        }
 
     }
 }

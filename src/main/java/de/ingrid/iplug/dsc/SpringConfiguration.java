@@ -22,19 +22,10 @@
  */
 package de.ingrid.iplug.dsc;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import de.ingrid.iplug.dsc.index.producer.BLPRecordSetProducer;
 
 @Configuration
 // @EnableAutoConfiguration
 public class SpringConfiguration {
-
-    @Bean
-    public BLPRecordSetProducer recordSetProducer() {
-        BLPRecordSetProducer producer = new BLPRecordSetProducer();
-        return producer;
-    }
 
 }
