@@ -262,7 +262,7 @@ public class UVPDataImporter implements Runnable {
     private static boolean validate(BlpModel bm) {
         boolean isValid = true;
 
-        if (bm.getName() == null || bm.getName().length() <= 3) {
+        if (bm.getName() == null || bm.getName().length() <= 2) {
             isValid = false;
             bm.errors.add( new UVPDataImporter().new StatusEntry( "Name is null or too short.", "IGNORED" ) );
         }
