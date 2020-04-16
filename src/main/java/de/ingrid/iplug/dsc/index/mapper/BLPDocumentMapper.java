@@ -91,27 +91,27 @@ public class BLPDocumentMapper implements IRecordMapper {
         doc.put( "y2", model.lat );
 
         ArrayList<Link> links = new ArrayList<>();
-        if (model.urlBlpInProgress != null) {
+        if (model.urlBlpInProgress != null && !model.urlBlpInProgress.trim().isEmpty()) {
             addToDoc(doc, "blp_url_in_progress", model.urlBlpInProgress );
             links.add( new Link( model.urlBlpInProgress, "Bauleitpläne im Beteiligungsverfahren" ) );
         }
-        if (model.urlBlpFinished != null) {
+        if (model.urlBlpFinished != null && !model.urlBlpFinished.trim().isEmpty()) {
             addToDoc(doc, "blp_url_finished", model.urlBlpFinished );
             links.add( new Link( model.urlBlpFinished, "Wirksame/rechtskräftige Bauleitpläne" ) );
         }
-        if (model.urlFnpInProgress != null) {
+        if (model.urlFnpInProgress != null && !model.urlFnpInProgress.trim().isEmpty()) {
             addToDoc(doc, "fnp_url_in_progress", model.urlFnpInProgress );
             links.add( new Link( model.urlFnpInProgress, "Flächennutzungspläne im Beteiligungsverfahren" ) );
         }
-        if (model.urlFnpFinished != null) {
+        if (model.urlFnpFinished != null && !model.urlFnpFinished.trim().isEmpty()) {
             addToDoc(doc, "fnp_url_finished", model.urlFnpFinished );
             links.add( new Link( model.urlFnpFinished, "Wirksame/rechtskräftige Flächennutzungspläne" ) );
         }
-        if (model.urlBpInProgress != null) {
+        if (model.urlBpInProgress != null && !model.urlBpInProgress.trim().isEmpty()) {
             addToDoc(doc, "bp_url_in_progress", model.urlBpInProgress );
             links.add( new Link( model.urlBpInProgress, "Bebauungspläne im Beteiligungsverfahren" ) );
         }
-        if (model.urlBpFinished != null) {
+        if (model.urlBpFinished != null && !model.urlBpFinished.trim().isEmpty()) {
             addToDoc(doc, "bp_url_finished", model.urlBpFinished );
             links.add( new Link( model.urlBpFinished, "Wirksame/rechtskräftige Bebauungspläne" ) );
         }
