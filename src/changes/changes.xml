@@ -29,7 +29,7 @@
   </properties>
   <body>
 
-    <release version="5.4.0" date="2020-xx-xx" description="Release 5.4.0">
+    <release version="5.4.0" date="2020-04-17" description="Release 5.4.0">
       <action type="fix" dev="wemove" issue="1831">
         BLP iPlug: Fix generating empty URLs.
       </action>
