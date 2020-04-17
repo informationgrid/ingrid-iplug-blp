@@ -29,6 +29,18 @@
   </properties>
   <body>
 
+    <release version="5.4.0" date="2020-04-17" description="Release 5.4.0">
+      <action type="fix" dev="wemove" issue="1831">
+        BLP iPlug: Fix generating empty URLs.
+      </action>
+      <action type="fix" dev="wemove" issue="1740">
+        BLP iPlug: Zulassen von Ortsnamen ab 3 Buchstaben.
+      </action>
+      <action type="fix" dev="wemove" issue="1670">
+        Fix highlight summary by search query.
+      </action>
+    </release>
+
     <release version="5.2.0" date="2019-11-01" description="Release 5.2.0">
       <action type="add" dev="wemove">
         Initial release.

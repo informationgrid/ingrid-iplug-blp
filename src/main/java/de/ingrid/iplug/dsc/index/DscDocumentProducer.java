@@ -2,7 +2,7 @@
  * **************************************************-
  * InGrid-iPlug DSC
  * ==================================================
- * Copyright (C) 2014 - 2019 wemove digital solutions GmbH
+ * Copyright (C) 2014 - 2020 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.1 or – as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -104,43 +104,6 @@ public class DscDocumentProducer implements IDocumentProducer {
             }
             return null;
         }
-    }
-    
-    /**
-     * Get a Elastic Search document by its given ID, which can be found
-     * under the given field
-     * @param id is the ID of the document
-     * @param field is the column of the database where the field is stored
-     * @return an Elastic Search document with the given ID
-     */
-    // TODO: this should be synchronized, otherwise two users publishing an object at the same time access the same recordIterator!!! 
-    public synchronized ElasticDocument getById(String id, String field) {
-        ElasticDocument doc = new ElasticDocument();
-        // iterate through all docs to make sure connection is closed next time
-        try {
-            while (recordSetProducer.hasNext()) {
-                SourceRecord next = recordSetProducer.next();
-                if (id.equals( next.get( field ) )) {
-                    for (IRecordMapper mapper : recordMapperList) {
-                        long start = 0;
-                        if (log.isDebugEnabled()) {
-                            start = System.currentTimeMillis();
-                        }
-                        mapper.map(next, doc);
-                        if (log.isDebugEnabled()) {
-                            log.debug("Mapping of source record with " + mapper + " took: " + (System.currentTimeMillis() - start) + " ms.");
-                        }
-                    }
-                    recordSetProducer.reset();
-                    break; 
-                }
-                
-            }
-        } catch (Exception e) {
-            log.error( "Exception occurred during getting document by ID and mapping it to lucene: ", e );
-            doc = null;
-        }
-        return doc;
     }
 
     /*
