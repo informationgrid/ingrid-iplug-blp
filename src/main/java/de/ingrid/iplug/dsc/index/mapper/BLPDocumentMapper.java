@@ -120,7 +120,7 @@ public class BLPDocumentMapper implements IRecordMapper {
         Template temp = freemarkerCfg.getTemplate( "additional_html.ftl" );
 
         Map<String, Object> root = new HashMap<>();
-        root.put( "description", model.descr );
+        root.put( "description", model.descr != null && !model.descr.trim().isEmpty() ? model.descr : "");
         root.put( "links", links );
 
         Writer out = new StringWriter();
