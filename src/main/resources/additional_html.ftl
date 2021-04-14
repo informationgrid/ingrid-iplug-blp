@@ -21,7 +21,7 @@
  **************************************************#
 -->
 <div>
-  <#if description??>
+  <#if description?has_content>
     <p><b>Mitgliedsgemeinden:</b> ${description}</p>
   </#if>
   <span class="link-list">
