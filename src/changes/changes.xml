@@ -29,6 +29,12 @@
   </properties>
   <body>
 
+    <release version="5.8.0" date="2021-04-15" description="Release 5.8.0">
+      <action type="add" dev="wemove" issue="2435">
+        Fix additional html description check.
+      </action>
+    </release>
+
     <release version="5.7.0" date="2021-01-18" description="Release 5.7.0">
       <action type="add" dev="wemove" issue="2211">
         Fix Redmine issue link generation for changes.
