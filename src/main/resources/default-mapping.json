@@ -30,11 +30,37 @@
     },
     "title": {
       "type": "text",
-      "store": true
+      "analyzer": "german",
+      "store": true,
+      "fields": {
+        "ngram": {
+          "type":  "text",
+          "analyzer": "ngram",
+          "search_analyzer": "german"
+        },
+        "edge_ngram": {
+          "type":  "text",
+          "analyzer": "edge_ngram",
+          "search_analyzer": "german"
+        }
+      }
     },
     "summary": {
       "type": "text",
-      "store": true
+      "analyzer": "german",
+      "store": true,
+      "fields": {
+        "ngram": {
+          "type":  "text",
+          "analyzer": "ngram",
+          "search_analyzer": "german"
+        },
+        "edge_ngram": {
+          "type":  "text",
+          "analyzer": "edge_ngram",
+          "search_analyzer": "german"
+        }
+      }
     },
     "blp_name": {
       "type": "text",
@@ -83,6 +109,9 @@
     "y2": {
       "type": "double",
       "store": true
+    },
+    "sort_hash": {
+      "type": "keyword"
     }
   }
 }
