@@ -33,6 +33,7 @@
   <properties>
     <iplug.type>IPLUG_DSC</iplug.type>
     <ingrid-base-webapp.version>5.10.0</ingrid-base-webapp.version>
+    <log4j2.version>2.15.0</log4j2.version>
   </properties>
 
   <!-- ==================== DEPENDENCY MANAGEMENT ==================== -->
@@ -104,6 +105,23 @@
       <artifactId>ingrid-utils</artifactId>
       <version>5.10.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-1.2-api</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <!-- end -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    
     <dependency>
       <groupId>de.ingrid</groupId>
       <artifactId>ingrid-utils-geo</artifactId>
