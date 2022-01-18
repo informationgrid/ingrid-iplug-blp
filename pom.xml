@@ -3,11 +3,11 @@
   <parent>
     <groupId>de.ingrid</groupId>
     <artifactId>ingrid-releases-pom</artifactId>
-    <version>5.7.0</version>
+    <version>5.11.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>ingrid-iplug-blp</artifactId>
-  <version>5.10.0</version>
+  <version>5.11.0</version>
   <packaging>jar</packaging>
   <name>InGrid iPlug BLP</name>
   <description>This iPlug indexes BLP documents from an excel file and can be queried by the iBus.</description>
@@ -32,7 +32,8 @@
   <!-- ==================== PROPERTIES ==================== -->
   <properties>
     <iplug.type>IPLUG_DSC</iplug.type>
-    <ingrid-base-webapp.version>5.10.0</ingrid-base-webapp.version>
+    <ingrid-base-webapp.version>5.11.0</ingrid-base-webapp.version>
+    <log4j2.version>2.17.1</log4j2.version>
   </properties>
 
   <!-- ==================== DEPENDENCY MANAGEMENT ==================== -->
@@ -102,12 +103,29 @@
     <dependency>
       <groupId>de.ingrid</groupId>
       <artifactId>ingrid-utils</artifactId>
-      <version>5.10.0</version>
+      <version>5.11.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-1.2-api</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <!-- end -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>de.ingrid</groupId>
       <artifactId>ingrid-utils-geo</artifactId>
-      <version>4.4.0</version>
+      <version>5.11.0</version>
     </dependency>
     <!-- The two following dependencies are needed for Jetty -->
     <dependency>
@@ -141,7 +159,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.13.1</version>
     </dependency>
     <dependency>
         <groupId>org.freemarker</groupId>
