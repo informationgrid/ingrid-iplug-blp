@@ -7,7 +7,7 @@ RUN unzip ingrid-iplug-*-installer.jar -d /tmp \
     && echo jetty.port=8080 > $INSTALL_DIR/conf/config.override.properties
 
 
-FROM docker-registry.wemove.com/ingrid-java:jre-8-alpine
+FROM docker-registry.wemove.com/ingrid-java:jre-8-slim
 ENV INGRID_USER=ingrid
 ENV RUN_DIRECTLY=true
 
