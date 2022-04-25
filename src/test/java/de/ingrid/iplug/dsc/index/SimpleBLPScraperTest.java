@@ -21,6 +21,7 @@ public class SimpleBLPScraperTest {
 
     @Test
     public void testScraping() throws IOException {
+        long startTime = System.nanoTime();
         String url = "http://www.ueberlingen.de/startseite/bauen+_+wohnen/beteiligungen.html";
         BlpScraper blpScraper = new BlpScraper();
         List<String> locationNames = blpScraper.scrapeUrlForLocationNames( url );
@@ -31,10 +32,16 @@ public class SimpleBLPScraperTest {
         assertTrue(locationNames.contains( "Uferpark" ));
         assertTrue(locationNames.contains( "Überlingen" ));
         assertTrue(locationNames.contains( "Altbirnau" ));
+
+        long endTime   = System.nanoTime();
+        long totalTime = (endTime - startTime) / 1_000_000_000;
+        System.out.println( "Total time in seconds: " + totalTime );
     }
 
     @Test
     public void testLocationNER() {
+        long startTime = System.nanoTime();
+
         StanfordCoreNLP pipeline = new StanfordCoreNLP("german");
         CoreDocument document = pipeline.processToCoreDocument("Goethe, geboren in Frankfurt am Main, studierte in Leipzig und war als Advokat in Wetzlar tätig. Er starb in Weimar");
         List<CoreLabel> coreLabelList = document.tokens();
@@ -43,6 +50,10 @@ public class SimpleBLPScraperTest {
             String ner = coreLabel.get( CoreAnnotations.NamedEntityTagAnnotation.class);
             System.out.println(coreLabel.originalText() + "->"+ner);
         }
+
+        long endTime   = System.nanoTime();
+        long totalTime = (endTime - startTime) / 1_000_000_000;
+        System.out.println( "Total time in seconds: " + totalTime );
     }
 
 }
