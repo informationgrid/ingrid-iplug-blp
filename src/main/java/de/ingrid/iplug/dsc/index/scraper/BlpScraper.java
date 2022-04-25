@@ -16,12 +16,10 @@ import java.util.stream.Stream;
 
 public class BlpScraper {
 
-    StanfordCoreNLP pipeline = new StanfordCoreNLP( "german" );
-    Set<String> set = new HashSet<>();
-    String words = "";
-    HtmlPage blpPage;
+    StanfordCoreNLP pipeline;
 
     public BlpScraper() throws IOException {
+        pipeline = new StanfordCoreNLP( "german" );
     }
 
     /**
@@ -32,12 +30,14 @@ public class BlpScraper {
      */
     public List<String> scrapeUrlForLocationNames(String url) {
 
-        try (WebClient client = new WebClient();) {
+        Set<String> tokens = new HashSet<>();
+
+        try (WebClient client = new WebClient()) {
             client.getOptions().setCssEnabled( false );
             client.getOptions().setJavaScriptEnabled( false );
 
             try {
-                blpPage = client.getPage( url );
+                HtmlPage blpPage = client.getPage( url );
                 HtmlElement htmlElement = blpPage.getDocumentElement();
 
                 // Collect content only from header tags
@@ -51,41 +51,36 @@ public class BlpScraper {
                         .flatMap( Collection::stream )
                         .collect( Collectors.toList() );
 
-                // Remove duplicates with set
                 for (HtmlElement header : headersAll) {
                     String text = header.asNormalizedText();
                     text = text.replace( "\"", "" );
-                    // Tokenize by splitting at whitespace
-                    List<String> tokens = Collections.list( new StringTokenizer( text, " " ) ).stream()
+                    // Tokenize by splitting at whitespace and adding to set to remove duplicates
+                    tokens.addAll( Collections.list( new StringTokenizer( text, " " ) ).stream()
                             .map( token -> (String) token )
-                            .collect( Collectors.toList() );
-
-                    set.addAll( tokens );
-                }
-
-                // Collect all words in single string
-                for (String word : set) {
-                    words = words + word + " ";
+                            .collect( Collectors.toSet() ) );
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return extractLocationNames( words );
+
+        return extractLocationNames( tokens );
     }
 
     /**
      * https://stanfordnlp.github.io/CoreNLP/index.html
      * Given a string returns a list of German Location Names using Named Entity Recognition
      *
-     * @param text
+     * @param tokens
      * @return
      */
-    public List<String> extractLocationNames(String text) {
+    public List<String> extractLocationNames(Set<String> tokens) {
+        // Collect all tokens in single string
+        String joinedTokens = String.join(" ", tokens);
         List<String> locationNames = new ArrayList<>();
         //        StanfordCoreNLP pipeline = new StanfordCoreNLP( "german" );
-        CoreDocument document = pipeline.processToCoreDocument( text );
+        CoreDocument document = pipeline.processToCoreDocument( joinedTokens );
         List<CoreLabel> coreLabelList = document.tokens();
 
         for (CoreLabel coreLabel : coreLabelList) {
