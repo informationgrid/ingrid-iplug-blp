@@ -4,106 +4,85 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.pipeline.CoreDocument;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BlpScraper {
 
-    StanfordCoreNLP pipeline;
+    private final static String stopWordsPath = "stop_words_german.json";
+    //TODO: Keep only words starting with capital letter and keep words with hyphen
+    private final static String germanRegex = "[^a-zA-Z\\u00F0-\\u02AF]";
 
-    public BlpScraper() throws IOException {
-        pipeline = new StanfordCoreNLP( "german" );
+    public BlpScraper(String url) throws IOException {
+        scrapeHtmlUnit();
     }
 
-    /**
-     * Scrape given url for location names
-     *
-     * @param url
-     * @return
-     */
-    public List<String> scrapeUrlForLocationNames(String url) {
+    public final static Set<String> GERMAN_STOP_WORDS = new HashSet<>(
+            Arrays.asList( "einer",
+                    "eine", "eines", "einem", "einen", "der", "die", "das",
+                    "dass", "daß", "du", "er", "sie", "es", "was", "wer",
+                    "wie", "wir", "und", "oder", "ohne", "mit", "am", "im",
+                    "in", "aus", "auf", "ist", "sein", "war", "wird", "ihr",
+                    "ihre", "ihres", "ihnen", "ihrer", "als", "für", "von",
+                    "mit", "dich", "dir", "mich", "mir", "mein", "sein",
+                    "kein", "durch", "wegen", "wird", "sich", "bei", "beim",
+                    "noch", "den", "dem", "zu", "zur", "zum", "auf", "ein",
+                    "auch", "werden", "an", "des", "sein", "sind", "vor",
+                    "nicht", "sehr", "um", "unsere", "ohne", "so", "da", "nur",
+                    "diese", "dieser", "diesem", "dieses", "nach", "über",
+                    "mehr", "hat", "bis", "uns", "unser", "unserer", "unserem",
+                    "unsers", "euch", "euers", "euer", "eurem", "ihr", "ihres",
+                    "ihrer", "ihrem", "alle", "vom" ) );
 
-        Set<String> tokens = new HashSet<>();
-
-        try (WebClient client = new WebClient()) {
+    public void scrapeHtmlUnit() {
+        try (WebClient client = new WebClient();) {
             client.getOptions().setCssEnabled( false );
             client.getOptions().setJavaScriptEnabled( false );
 
             try {
-                HtmlPage blpPage = client.getPage( url );
-                HtmlElement htmlElement = blpPage.getDocumentElement();
+                HtmlPage blpPage = client.getPage( "http://www.ueberlingen.de/startseite/bauen+_+wohnen/beteiligungen.html" );
+                HtmlElement htmlElement  = blpPage.getDocumentElement();
 
-                // Collect content only from header tags
-                List<HtmlElement> headers1 = htmlElement.getElementsByTagName( "h1" );
-                List<HtmlElement> headers2 = htmlElement.getElementsByTagName( "h2" );
-                List<HtmlElement> headers3 = htmlElement.getElementsByTagName( "h3" );
-                List<HtmlElement> headers4 = htmlElement.getElementsByTagName( "h4" );
+                htmlElement.removeChild("footer", 0);
+                htmlElement.removeChild("nav", 0);
+                htmlElement.removeChild("header", 0);
+                removeAllChildrenWithTag( htmlElement, "a" );
+                removeAllChildrenWithTag( htmlElement, "table" );
 
-                // Join content into one List
-                List<HtmlElement> headersAll = Stream.of( headers1, headers2, headers3, headers4 )
-                        .flatMap( Collection::stream )
-                        .collect( Collectors.toList() );
+                String text = htmlElement.asNormalizedText();
+                text = text.replace( "\n", " " );
 
-                for (HtmlElement header : headersAll) {
-                    String text = header.asNormalizedText();
-                    text = text.replace( "\"", "" );
-                    // Tokenize by splitting at whitespace and adding to set to remove duplicates
-                    tokens.addAll( Collections.list( new StringTokenizer( text, " " ) ).stream()
-                            .map( token -> (String) token )
-                            .collect( Collectors.toSet() ) );
-                }
+                Set<String> stringList = Collections.list(new StringTokenizer( text, " " )).stream()
+                        .map(token -> (String) token)
+                        .collect(Collectors.toSet());
+
+                System.out.println(stringList);
+                stringList.removeAll( GERMAN_STOP_WORDS );
+                stringList.removeIf( Pattern.compile(germanRegex).asPredicate() );
+                System.out.println(stringList);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        return extractLocationNames( tokens );
     }
 
-    /**
-     * https://stanfordnlp.github.io/CoreNLP/index.html
-     * Given a string returns a list of German Location Names using Named Entity Recognition
-     *
-     * @param tokens
-     * @return
-     */
-    public List<String> extractLocationNames(Set<String> tokens) {
-        // Collect all tokens in single string
-        String joinedTokens = String.join(" ", tokens);
-        List<String> locationNames = new ArrayList<>();
-        //        StanfordCoreNLP pipeline = new StanfordCoreNLP( "german" );
-        CoreDocument document = pipeline.processToCoreDocument( joinedTokens );
-        List<CoreLabel> coreLabelList = document.tokens();
-
-        for (CoreLabel coreLabel : coreLabelList) {
-            String ner = coreLabel.get( CoreAnnotations.NamedEntityTagAnnotation.class );
-            if (ner.equals( "LOCATION" )) {
-                locationNames.add( coreLabel.originalText() );
-            }
-            //System.out.println(coreLabel.originalText() + "->" + ner);
-        }
-        return locationNames;
-    }
-
-    /**
-     * Use to remove all html elements with given tag from HtmlElement
-     * @param htmlElement
-     * @param tag
-     */
     public void removeAllChildrenWithTag(HtmlElement htmlElement, String tag) {
         DomNodeList<HtmlElement> anchors = htmlElement.getElementsByTagName( tag );
         int anchorsSize = anchors.size();
         for (int i = 0; i < anchorsSize; i++) {
-            anchors.get( 0 ).remove();
+            anchors.get(0).remove();
         }
     }
+
+    //TODO: Remove stop words case-insensitively
+    public void filterStopWords() {
+
+    }
+
 
 }

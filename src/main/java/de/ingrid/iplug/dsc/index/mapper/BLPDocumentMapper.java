@@ -26,7 +26,7 @@
 package de.ingrid.iplug.dsc.index.mapper;
 
 import de.ingrid.admin.Config;
-import de.ingrid.iplug.dsc.index.scraper.BlpScraper;
+//import de.ingrid.iplug.dsc.index.scraper.BlpScraper;
 import de.ingrid.iplug.dsc.om.BLPSourceRecord;
 import de.ingrid.iplug.dsc.om.SourceRecord;
 import de.ingrid.iplug.dsc.utils.Link;
@@ -120,11 +120,10 @@ public class BLPDocumentMapper implements IRecordMapper {
 
         List<String> blpUrls = links.stream().map( Link::getUrl ).collect( Collectors.toList() );
 
-        List<String> locationNames = crawlUrls( blpUrls );
-        for (String location: locationNames) {
-            addToDoc( doc, "content", location);
-
-        }
+//        List<String> locationNames = crawlUrls( blpUrls );
+//        for (String location: locationNames) {
+//            addToDoc( doc, "content", location);
+//        }
 
         createFreemarkerCfg();
         Template temp = freemarkerCfg.getTemplate( "additional_html.ftl" );
@@ -163,16 +162,16 @@ public class BLPDocumentMapper implements IRecordMapper {
 
     }
 
-    public List<String> crawlUrls(List<String> blpUrls) throws IOException {
-        // TODO: Instantiate with Spring?
-        List<String> locationNames = new ArrayList<>();
-        BlpScraper blpScraper = new BlpScraper();
-        for (String blpUrl: blpUrls) {
-            if (blpUrl != null && blpUrl.length() > 0) {
-                locationNames.addAll( blpScraper.scrapeUrlForLocationNames( blpUrl ) );
-            }
-        }
-        return locationNames;
-    }
+//    public List<String> crawlUrls(List<String> blpUrls) throws IOException {
+//        // TODO: Instantiate with Spring?
+//        List<String> locationNames = new ArrayList<>();
+//        BlpScraper blpScraper = new BlpScraper();
+//        for (String blpUrl: blpUrls) {
+//            if (blpUrl != null && blpUrl.length() > 0) {
+//                locationNames.addAll( blpScraper.scrapeUrlForLocationNames( blpUrl ) );
+//            }
+//        }
+//        return locationNames;
+//    }
 
 }
