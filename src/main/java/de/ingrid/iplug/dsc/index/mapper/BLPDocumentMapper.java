@@ -26,7 +26,7 @@
 package de.ingrid.iplug.dsc.index.mapper;
 
 import de.ingrid.admin.Config;
-//import de.ingrid.iplug.dsc.index.scraper.BlpScraper;
+import de.ingrid.iplug.dsc.index.scraper.BlpScraper;
 import de.ingrid.iplug.dsc.om.BLPSourceRecord;
 import de.ingrid.iplug.dsc.om.SourceRecord;
 import de.ingrid.iplug.dsc.utils.Link;
@@ -42,10 +42,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("recordMapper")
@@ -118,12 +115,13 @@ public class BLPDocumentMapper implements IRecordMapper {
             links.add( new Link( model.urlBpFinished, "Wirksame/rechtskräftige Bebauungspläne" ) );
         }
 
-        List<String> blpUrls = links.stream().map( Link::getUrl ).collect( Collectors.toList() );
+        // Collect all urls
+        List<String> urls = links.stream().map( Link::getUrl ).collect( Collectors.toList() );
 
-//        List<String> locationNames = crawlUrls( blpUrls );
-//        for (String location: locationNames) {
-//            addToDoc( doc, "content", location);
-//        }
+        Set<String> entries = crawlUrls( urls );
+        for (String entry: entries) {
+            addToDoc( doc, "scraped_content", entry);
+        }
 
         createFreemarkerCfg();
         Template temp = freemarkerCfg.getTemplate( "additional_html.ftl" );
@@ -162,16 +160,15 @@ public class BLPDocumentMapper implements IRecordMapper {
 
     }
 
-//    public List<String> crawlUrls(List<String> blpUrls) throws IOException {
-//        // TODO: Instantiate with Spring?
-//        List<String> locationNames = new ArrayList<>();
-//        BlpScraper blpScraper = new BlpScraper();
-//        for (String blpUrl: blpUrls) {
-//            if (blpUrl != null && blpUrl.length() > 0) {
-//                locationNames.addAll( blpScraper.scrapeUrlForLocationNames( blpUrl ) );
-//            }
-//        }
-//        return locationNames;
-//    }
+    public Set<String> crawlUrls(List<String> urls)  {
+        Set<String> entries = new HashSet<>();
+        BlpScraper blpScraper = new BlpScraper();
+        for (String url: urls) {
+            if (url != null && url.length() > 0) {
+                entries.addAll( blpScraper.scrapeUrl( url ) );
+            }
+        }
+        return entries;
+    }
 
 }

@@ -18,7 +18,7 @@ public class SimpleBLPScraperTest {
         long startTime = System.nanoTime();
         String url = "http://www.ueberlingen.de/startseite/bauen+_+wohnen/beteiligungen.html";
         BlpScraper blpScraper = new BlpScraper();
-        Set entries = blpScraper.scrapeUrl(url);
+        Set<String> entries = blpScraper.scrapeUrl(url);
         System.out.println(entries);
 
         long endTime   = System.nanoTime();
@@ -27,12 +27,15 @@ public class SimpleBLPScraperTest {
     }
 
     @Test
-    public void testScrapingRedirect() throws IOException {
+    public void testScrapingRedirect() {
         long startTime = System.nanoTime();
-        String url = "http://www.ueberlingen.de/startseite/bauen+_+wohnen/bebauungsplaene+neu.html";
+        String url = "https://www.boldecker-land.de/portal/startseite.html";
         BlpScraper blpScraper = new BlpScraper();
-        Set entries = blpScraper.scrapeUrl(url);
-        System.out.println(entries);
+        Set<String> entries = blpScraper.scrapeUrl(url);
+        if (entries.size() > 0) {
+            System.out.println(entries);
+            System.out.println(entries.size());
+        }
 
         long endTime   = System.nanoTime();
         long totalTime = (endTime - startTime) / 1_000_000_000;
