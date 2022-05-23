@@ -94,6 +94,14 @@
       "type": "text",
       "store": true
     },
+    "content": {
+      "type": "text",
+      "analyzer": "german"
+    },
+    "scraped_content": {
+      "type": "text",
+      "analyzer": "german"
+    },
     "x1": {
       "type": "double",
       "store": true

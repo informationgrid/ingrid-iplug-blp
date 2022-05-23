@@ -118,7 +118,7 @@ public class BLPDocumentMapper implements IRecordMapper {
         // Collect all urls, remove duplicates with set
         Set<String> urls = links.stream().map( Link::getUrl ).collect( Collectors.toSet() );
 
-        Set<String> entries = crawlUrls( urls );
+        List<String> entries = crawlUrls( urls );
         for (String entry: entries) {
             addToDoc( doc, "scraped_content", entry);
         }
@@ -160,15 +160,29 @@ public class BLPDocumentMapper implements IRecordMapper {
 
     }
 
-    public Set<String> crawlUrls(Set<String> urls)  {
-        Set<String> entries = new HashSet<>();
+    public List<String> crawlUrls(Set<String> urls) {
+        List<String> contents = new ArrayList<>();
+        BlpScraper blpScraper = new BlpScraper();
+
+        for (String url: urls) {
+            if (null != url && url.length() > 0){
+                String content = blpScraper.scrapeUrl( url );
+                if (null != content && !content.equals( "") ) {
+                    contents.add( content );
+                }
+            }
+        }
+        return contents;
+    }
+/*    public Set<String> crawlUrls(Set<String> urls)  {
+        Set<String> content = new HashSet<>();
         BlpScraper blpScraper = new BlpScraper();
         for (String url: urls) {
             if (url != null && url.length() > 0) {
-                entries.addAll( blpScraper.scrapeUrl( url ) );
+                content.addAll( blpScraper.scrapeUrl( url ) );
             }
         }
-        return entries;
-    }
+        return content;
+    }*/
 
 }

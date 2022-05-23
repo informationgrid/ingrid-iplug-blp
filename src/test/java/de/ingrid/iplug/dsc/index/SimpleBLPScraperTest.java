@@ -4,8 +4,6 @@ import de.ingrid.admin.JettyStarter;
 import de.ingrid.iplug.dsc.index.scraper.BlpScraper;
 import org.junit.Test;
 
-import java.util.Set;
-
 public class SimpleBLPScraperTest {
 
     public SimpleBLPScraperTest() throws Exception {
@@ -17,8 +15,9 @@ public class SimpleBLPScraperTest {
         long startTime = System.nanoTime();
         String url = "http://www.ueberlingen.de/startseite/bauen+_+wohnen/beteiligungen.html";
         BlpScraper blpScraper = new BlpScraper();
-        Set<String> entries = blpScraper.scrapeUrl(url);
-        System.out.println(entries);
+//        Set<String> entries = blpScraper.scrapeUrl(url);
+        String content = blpScraper.scrapeUrl( url );
+        System.out.println(content);
 
         long endTime   = System.nanoTime();
         long totalTime = (endTime - startTime) / 1_000_000_000;
@@ -30,11 +29,9 @@ public class SimpleBLPScraperTest {
         long startTime = System.nanoTime();
         String url = "https://www.boldecker-land.de/portal/startseite.html";
         BlpScraper blpScraper = new BlpScraper();
-        Set<String> entries = blpScraper.scrapeUrl(url);
-        if (entries.size() > 0) {
-            System.out.println(entries);
-            System.out.println(entries.size());
-        }
+        //        Set<String> entries = blpScraper.scrapeUrl(url);
+        String content = blpScraper.scrapeUrl( url );
+        System.out.println(content);
 
         long endTime   = System.nanoTime();
         long totalTime = (endTime - startTime) / 1_000_000_000;
