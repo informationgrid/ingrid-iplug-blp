@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 
 public class BlpScraper {
     //TODO: Improve Regex ( Initial special characters )
-    private final static String regex = "\\b[A-Z\\u00c4-\\u00dc].*[a-z]$";
-    private static Log log = LogFactory.getLog( BlpSearchPlug.class );
+    private final static String regex = "^[A-Z\\u00c4-\\u00dc].*[a-zA-Z]$";
+    private static final Log log = LogFactory.getLog( BlpSearchPlug.class );
     private final static String stopWordsPath = "src/main/resources/stop_words.txt";
     private Set<String> stopWords;
 
@@ -41,7 +41,7 @@ public class BlpScraper {
             client.getOptions().setJavaScriptEnabled( false );
             client.getOptions().setPrintContentOnFailingStatusCode( false );
             client.getOptions().setTimeout( 5000 );
-            //            client.getOptions().setThrowExceptionOnFailingStatusCode( false );
+            //            client.getOptions().setThrowExceptionOnFailingStatusCodeblps( false );
             try {
                 blpPage = client.getPage( url );
             } catch (FailingHttpStatusCodeException statusCode) {
@@ -67,9 +67,9 @@ public class BlpScraper {
                     content = content.replace( "\n", " " );
 
                     keySet = Collections.list( new StringTokenizer( content, " " ) ).stream()
-                            .map( token -> ((String) token).replace( "\"", "" ) )//TODO: remove when better regex present
+                            .map( token -> ((String) token))
                             .filter( Pattern.compile( regex ).asPredicate() )
-                            .filter( token -> !this.stopWords.contains( token ))
+                            .filter( token -> !this.stopWords.contains( token.toLowerCase() ))
                             .collect( Collectors.toSet() );
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,14 +79,17 @@ public class BlpScraper {
         }
     }
 
+    /**
+     * Reads all words from stop_words.txt
+     */
     public Set<String> setStopWords() {
         Set<String> stopWords = new HashSet<>();
-
         try(BufferedReader br = new BufferedReader(new FileReader(stopWordsPath))) {
             String line = br.readLine();
 
             while (line != null) {
-                stopWords.add(line.substring( 0,1 ).toUpperCase() + line.substring( 1 ));
+                stopWords.add(line);
+//                stopWords.add(line.substring( 0,1 ).toUpperCase() + line.substring( 1 ));
                 line = br.readLine();
             }
         } catch (IOException e) {
