@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +49,9 @@ public class BlpScraper {
                 log.warn("could not get page content: Error Code " + statusCode.getStatusCode() + ":  " + url);
 
             } catch (MalformedURLException e) {
-                log.warn("malformed url exception");
+                log.warn("malformed url exception: " + url);
+            } catch (SocketTimeoutException e) {
+                log.warn("timed out reading url: " + url);
             } catch (IOException e) {
                 e.printStackTrace();
             }

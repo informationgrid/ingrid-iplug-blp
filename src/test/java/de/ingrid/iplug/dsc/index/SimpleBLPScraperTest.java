@@ -4,7 +4,6 @@ import de.ingrid.admin.JettyStarter;
 import de.ingrid.iplug.dsc.index.scraper.BlpScraper;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Set;
 
 public class SimpleBLPScraperTest {
@@ -14,7 +13,7 @@ public class SimpleBLPScraperTest {
     }
 
     @Test
-    public void testScraping() throws IOException {
+    public void testScraping()  {
         long startTime = System.nanoTime();
         String url = "http://www.ueberlingen.de/startseite/bauen+_+wohnen/beteiligungen.html";
         BlpScraper blpScraper = new BlpScraper();

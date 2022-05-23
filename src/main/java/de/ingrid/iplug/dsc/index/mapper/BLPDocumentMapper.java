@@ -115,8 +115,8 @@ public class BLPDocumentMapper implements IRecordMapper {
             links.add( new Link( model.urlBpFinished, "Wirksame/rechtskräftige Bebauungspläne" ) );
         }
 
-        // Collect all urls
-        List<String> urls = links.stream().map( Link::getUrl ).collect( Collectors.toList() );
+        // Collect all urls, remove duplicates with set
+        Set<String> urls = links.stream().map( Link::getUrl ).collect( Collectors.toSet() );
 
         Set<String> entries = crawlUrls( urls );
         for (String entry: entries) {
@@ -160,7 +160,7 @@ public class BLPDocumentMapper implements IRecordMapper {
 
     }
 
-    public Set<String> crawlUrls(List<String> urls)  {
+    public Set<String> crawlUrls(Set<String> urls)  {
         Set<String> entries = new HashSet<>();
         BlpScraper blpScraper = new BlpScraper();
         for (String url: urls) {
