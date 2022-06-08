@@ -174,15 +174,4 @@ public class BLPDocumentMapper implements IRecordMapper {
         }
         return contents;
     }
-/*    public Set<String> crawlUrls(Set<String> urls)  {
-        Set<String> content = new HashSet<>();
-        BlpScraper blpScraper = new BlpScraper();
-        for (String url: urls) {
-            if (url != null && url.length() > 0) {
-                content.addAll( blpScraper.scrapeUrl( url ) );
-            }
-        }
-        return content;
-    }*/
-
 }

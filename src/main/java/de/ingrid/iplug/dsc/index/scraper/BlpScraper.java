@@ -5,8 +5,10 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.ingrid.utils.statusprovider.StatusProviderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -39,16 +41,9 @@ public class BlpScraper {
 
             try {
                 blpPage = client.getPage( url );
-            } catch (FailingHttpStatusCodeException statusCode) {
-                log.info( "could not get page content: Error Code " + statusCode.getStatusCode() + ":  " + url );
-            } catch (MalformedURLException e) {
-                log.info( "malformed url exception: " + url );
-            } catch (SocketTimeoutException e) {
-                log.info( "timed out reading url: " + url );
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                log.warn( "Error getting URL: " + e.getMessage() );
             }
-
             return blpPage;
         }
     }
