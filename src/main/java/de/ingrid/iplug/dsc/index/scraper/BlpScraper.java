@@ -1,18 +1,11 @@
 package de.ingrid.iplug.dsc.index.scraper;
 
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import de.ingrid.utils.statusprovider.StatusProviderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 
 public class BlpScraper {
 
