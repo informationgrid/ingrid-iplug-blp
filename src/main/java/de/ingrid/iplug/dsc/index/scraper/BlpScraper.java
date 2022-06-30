@@ -51,6 +51,7 @@ public class BlpScraper {
             htmlElement.removeChild( "header", 0 );
             removeAllChildrenWithTag( htmlElement, "a" );
             removeAllChildrenWithTag( htmlElement, "table" );
+            removeAllChildrenWithTag( htmlElement, "aside" );
             content = htmlElement.asNormalizedText();
             content = content.replace( "\n", " " );
         } catch (Exception e) {
