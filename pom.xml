@@ -7,7 +7,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>ingrid-iplug-blp</artifactId>
-  <version>5.13.0-SNAPSHOT</version>
+  <version>5.14.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>InGrid iPlug BLP</name>
   <description>This iPlug indexes BLP documents from an excel file and can be queried by the iBus.</description>
