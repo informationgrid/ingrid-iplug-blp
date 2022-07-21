@@ -530,7 +530,9 @@ public class UVPDataImporter implements Runnable {
             if (responseCode == -1) {
                 throw new Exception( "Problems accessing '" + urlstring + " (HTTP_ERROR: " + responseCode + ") (" + e + ")" );
             } else {
+                bm.errors.add( new UVPDataImporter().new StatusEntry( "Problems accessing '" + urlstring + " (HTTP_ERROR: " + responseCode + ")", "HTTP" ) );
                 throw new Exception( "Problems accessing '" + urlstring + " (HTTP_ERROR: " + responseCode + ")" );
+
             }
         } finally {
             if (con != null) {

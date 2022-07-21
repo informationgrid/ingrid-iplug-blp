@@ -25,17 +25,8 @@
  */
 package de.ingrid.iplug.dsc.index.mapper;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import de.ingrid.admin.Config;
+import de.ingrid.iplug.dsc.index.scraper.BlpScraper;
 import de.ingrid.iplug.dsc.om.BLPSourceRecord;
 import de.ingrid.iplug.dsc.om.SourceRecord;
 import de.ingrid.iplug.dsc.utils.Link;
@@ -45,6 +36,14 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("recordMapper")
 public class BLPDocumentMapper implements IRecordMapper {
@@ -116,6 +115,14 @@ public class BLPDocumentMapper implements IRecordMapper {
             links.add( new Link( model.urlBpFinished, "Wirksame/rechtskräftige Bebauungspläne" ) );
         }
 
+        // Collect all urls, remove duplicates with set
+        Set<String> urls = links.stream().map( Link::getUrl ).collect( Collectors.toSet() );
+
+        List<String> entries = crawlUrls( urls );
+        for (String entry: entries) {
+            addToDoc( doc, "scraped_content", entry);
+        }
+
         createFreemarkerCfg();
         Template temp = freemarkerCfg.getTemplate( "additional_html.ftl" );
 
@@ -151,5 +158,20 @@ public class BLPDocumentMapper implements IRecordMapper {
             doc.put("content", value);
         }
 
+    }
+
+    public List<String> crawlUrls(Set<String> urls) {
+        List<String> contents = new ArrayList<>();
+        BlpScraper blpScraper = new BlpScraper();
+
+        for (String url: urls) {
+            if (null != url && url.length() > 0){
+                String content = blpScraper.scrapeUrl( url );
+                if (null != content && !content.equals( "") ) {
+                    contents.add( content );
+                }
+            }
+        }
+        return contents;
     }
 }
