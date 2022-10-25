@@ -51,6 +51,9 @@ public class BLPDocumentMapper implements IRecordMapper {
     @Autowired
     Config config;
 
+    @Autowired
+    BlpScraper blpScraper;
+
     Configuration freemarkerCfg;
 
     public void createFreemarkerCfg() throws IOException {
@@ -162,11 +165,10 @@ public class BLPDocumentMapper implements IRecordMapper {
 
     public List<String> crawlUrls(Set<String> urls) {
         List<String> contents = new ArrayList<>();
-        BlpScraper blpScraper = new BlpScraper();
 
         for (String url: urls) {
             if (null != url && url.length() > 0){
-                String content = blpScraper.scrapeUrl( url );
+                String content = this.blpScraper.scrapeUrl( url );
                 if (null != content && !content.equals( "") ) {
                     contents.add( content );
                 }

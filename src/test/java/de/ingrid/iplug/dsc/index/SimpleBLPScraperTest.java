@@ -60,4 +60,17 @@ public class SimpleBLPScraperTest {
         System.out.println( "Total time in seconds: " + totalTime );
     }
 
+    @Test
+    public void testPageWithJavaScript() {
+        long startTime = System.nanoTime();
+        String url = "https://geoportal-luckau.de/viewer2.php";
+        BlpScraper blpScraper = new BlpScraper();
+        String content = blpScraper.scrapeUrl( url );
+        System.out.println(content);
+
+        long endTime   = System.nanoTime();
+        long totalTime = (endTime - startTime) / 1_000_000_000;
+        System.out.println( "Total time in seconds: " + totalTime );
+    }
+
 }
