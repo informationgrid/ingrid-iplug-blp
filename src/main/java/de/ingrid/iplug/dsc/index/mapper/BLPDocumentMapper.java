@@ -48,13 +48,18 @@ import java.util.stream.Collectors;
 @Service("recordMapper")
 public class BLPDocumentMapper implements IRecordMapper {
 
-    @Autowired
+    final
     Config config;
 
-    @Autowired
+    final
     BlpScraper blpScraper;
 
     Configuration freemarkerCfg;
+
+    public BLPDocumentMapper(Config config, BlpScraper blpScraper) {
+        this.config = config;
+        this.blpScraper = blpScraper;
+    }
 
     public void createFreemarkerCfg() throws IOException {
         if (freemarkerCfg == null) {

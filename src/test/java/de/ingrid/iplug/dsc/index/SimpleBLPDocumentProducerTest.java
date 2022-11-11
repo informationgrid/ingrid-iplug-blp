@@ -26,12 +26,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import de.ingrid.admin.Config;
+import de.ingrid.iplug.dsc.index.scraper.BlpScraper;
 import org.junit.Test;
 
 import de.ingrid.admin.JettyStarter;
@@ -48,14 +46,14 @@ public class SimpleBLPDocumentProducerTest {
     }
 
     @Test
-    public void testDscDocumentProducer() throws Exception {
+    public void testDscDocumentProducer() {
 
         BLPRecordSetProducer p = new BLPRecordSetProducer(new StatusProviderService());
         p.setExcelFilename( "src/test/resources/blp-urls-test.xlsx" );
 
-        BLPDocumentMapper m = new BLPDocumentMapper();
+        BLPDocumentMapper m = new BLPDocumentMapper(new Config(), new BlpScraper());
 
-        List<IRecordMapper> mList = new ArrayList<IRecordMapper>();
+        List<IRecordMapper> mList = new ArrayList<>();
         mList.add( m );
 
         DscDocumentProducer dp = new DscDocumentProducer();
@@ -66,7 +64,7 @@ public class SimpleBLPDocumentProducerTest {
             while (dp.hasNext()) {
                 Map<String, Object> doc = dp.next();
                 assertNotNull( doc );
-                Collection<String> keys = Arrays.asList( "blp_name" );
+                Collection<String> keys = Collections.singletonList("blp_name");
                 assertTrue( doc.keySet().containsAll( keys ) );
             }
         } else {
