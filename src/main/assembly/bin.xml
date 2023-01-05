@@ -32,16 +32,6 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <directory>src/main/resources</directory>
-      <outputDirectory>${project.artifactId}-${project.version}/conf</outputDirectory>
-      <includes>
-        <include>config.properties</include>
-        <include>elasticsearch.properties</include>
-        <include>ingrid.auth</include>
-        <include>log4j2.xml</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>src/main/release/udk_presets</directory>
       <outputDirectory>${project.artifactId}-${project.version}/udk_presets</outputDirectory>
     </fileSet>
@@ -75,11 +65,11 @@
     </fileSet>
     <fileSet>
       <directory>src/main/webapp</directory>
-      <outputDirectory>${project.artifactId}-${project.version}/webapp</outputDirectory>
+      <outputDirectory>${project.artifactId}-${project.version}/public</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>target/base-webapp</directory>
-      <outputDirectory>${project.artifactId}-${project.version}/webapp</outputDirectory>
+      <outputDirectory>${project.artifactId}-${project.version}/public</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>target/logs</directory>
