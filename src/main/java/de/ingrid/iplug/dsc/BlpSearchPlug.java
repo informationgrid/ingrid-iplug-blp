@@ -39,6 +39,7 @@ import de.ingrid.utils.query.FieldQuery;
 import de.ingrid.utils.query.IngridQuery;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tomcat.util.scan.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -53,7 +54,7 @@ import java.io.IOException;
  *
  * @author joachim@wemove.com
  */
-@ImportResource("/springapp-servlet.xml")
+@ImportResource({"/springapp-servlet.xml", "/override/*.xml"})
 @SpringBootApplication(scanBasePackages = "de.ingrid")
 @ComponentScan(
         basePackages = "de.ingrid",
@@ -185,6 +186,7 @@ public class BlpSearchPlug extends HeartBeatPlug implements IRecordLoader {
     }
 
     public static void main(String[] args) {
+        System.setProperty(Constants.SKIP_JARS_PROPERTY, "tools.jar,derby*.jar,unit-api*.jar,geo*.jar,si*.jar,jai*.jar,commons*.jar,Geo*.jar,jgrid*.jar,uo*.jar,system*.jar,gt*.jar,jackson*.jar,org*.jar,ej*.jar,jt*.jar,net*.jar,serial*.jar,xml*.jar,xerc*.jar,mchan*.jar");
         SpringApplication.run(BlpSearchPlug.class, args);
     }
 
