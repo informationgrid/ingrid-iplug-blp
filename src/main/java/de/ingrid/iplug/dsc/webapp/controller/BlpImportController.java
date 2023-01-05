@@ -72,7 +72,7 @@ public class BlpImportController extends AbstractController {
         return AdminViews.EXCEL_UPLOAD;
     }
 
-    @RequestMapping(value = { "/uploadStatus" }, method = RequestMethod.GET)
+    @RequestMapping(value = { "/rest/uploadStatus" }, method = RequestMethod.GET)
     public ResponseEntity<Collection<State>> getStatusBlpImport(HttpServletRequest request, HttpServletResponse response) {
         return new ResponseEntity<Collection<State>>( statusProviderService.getStatusProvider( "import" ).getStates(), HttpStatus.OK );
     }
