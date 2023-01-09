@@ -72,7 +72,7 @@ public class BlpImportController extends AbstractController {
         return AdminViews.EXCEL_UPLOAD;
     }
 
-    @RequestMapping(value = { "/uploadStatus" }, method = RequestMethod.GET)
+    @RequestMapping(value = { "/rest/uploadStatus" }, method = RequestMethod.GET)
     public ResponseEntity<Collection<State>> getStatusBlpImport(HttpServletRequest request, HttpServletResponse response) {
         return new ResponseEntity<Collection<State>>( statusProviderService.getStatusProvider( "import" ).getStates(), HttpStatus.OK );
     }
@@ -81,12 +81,13 @@ public class BlpImportController extends AbstractController {
      * Upload excel file.
      *
      * @param uploadBean
-     * @param model
      * @return
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.POST)
-    public String upload(@ModelAttribute("uploadBean") final UploadBean uploadBean, final Model model, @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject)
+    @RequestMapping(value = {"/iplug-pages/excelUpload.html"}, method = RequestMethod.POST)
+    public String upload(
+            @ModelAttribute("uploadBean") final UploadBean uploadBean, 
+            @ModelAttribute("plugDescription") final PlugdescriptionCommandObject commandObject)
             throws IOException {
 
         MultipartFile uploadedFile = uploadBean.getFile();

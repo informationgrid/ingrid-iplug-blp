@@ -34,10 +34,10 @@ import de.ingrid.utils.PlugDescription;
 public class Configuration implements IConfig {
 
 
-    @Value("${mapper.index.docSql}")
+    @Value("${mapper.index.docSql:}")
     public String indexMapperSql;
 
-    @Value("${mapper.index.fieldId}")
+    @Value("${mapper.index.fieldId:}")
     public String indexFieldId;
 
     @Value("${mapper.index.beans:[]}")
