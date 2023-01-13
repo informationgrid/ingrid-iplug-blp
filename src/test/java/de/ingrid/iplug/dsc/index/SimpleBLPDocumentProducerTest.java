@@ -2,7 +2,7 @@
  * **************************************************-
  * InGrid-iPlug DSC
  * ==================================================
- * Copyright (C) 2014 - 2022 wemove digital solutions GmbH
+ * Copyright (C) 2014 - 2023 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.1 or – as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -22,55 +22,47 @@
  */
 package de.ingrid.iplug.dsc.index;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.junit.Test;
+import de.ingrid.admin.Config;
+import de.ingrid.iplug.dsc.index.scraper.BlpScraper;
+import org.junit.jupiter.api.Test;
 
-import de.ingrid.admin.JettyStarter;
 import de.ingrid.utils.statusprovider.StatusProviderService;
 import de.ingrid.iplug.dsc.index.mapper.BLPDocumentMapper;
 import de.ingrid.iplug.dsc.index.mapper.IRecordMapper;
 import de.ingrid.iplug.dsc.index.producer.BLPRecordSetProducer;
 
 public class SimpleBLPDocumentProducerTest {
-    
-    
-    public SimpleBLPDocumentProducerTest() throws Exception {
-        new JettyStarter(false);
-    }
 
     @Test
-    public void testDscDocumentProducer() throws Exception {
+    void testDscDocumentProducer() {
 
         BLPRecordSetProducer p = new BLPRecordSetProducer(new StatusProviderService());
-        p.setExcelFilename( "src/test/resources/blp-urls-test.xlsx" );
+        p.setExcelFilename("src/test/resources/blp-urls-test.xlsx");
 
-        BLPDocumentMapper m = new BLPDocumentMapper();
+        BLPDocumentMapper m = new BLPDocumentMapper(new Config(), new BlpScraper());
 
-        List<IRecordMapper> mList = new ArrayList<IRecordMapper>();
-        mList.add( m );
+        List<IRecordMapper> mList = new ArrayList<>();
+        mList.add(m);
 
         DscDocumentProducer dp = new DscDocumentProducer();
-        dp.setRecordSetProducer( p );
-        dp.setRecordMapperList( mList );
+        dp.setRecordSetProducer(p);
+        dp.setRecordMapperList(mList);
 
         if (dp.hasNext()) {
             while (dp.hasNext()) {
                 Map<String, Object> doc = dp.next();
-                assertNotNull( doc );
-                Collection<String> keys = Arrays.asList( "blp_name" );
-                assertTrue( doc.keySet().containsAll( keys ) );
+                assertNotNull(doc);
+                Collection<String> keys = Collections.singletonList("blp_name");
+                assertTrue(doc.keySet().containsAll(keys));
             }
         } else {
-            fail( "No document produced" );
+            fail("No document produced");
         }
     }
 

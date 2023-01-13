@@ -1,3 +1,5 @@
+Attention: The override-xml must now be under the conf/override - directory.
+
 Use this folder to override the default spring configuration.
 Add a *.xml file containing the beans to use and overriding the default beans (e.g. add an additional mapper when mapping records to index ...).
 When updating the iPlug with a new version this directory is kept and functionality will not be lost.

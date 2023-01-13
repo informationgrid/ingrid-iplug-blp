@@ -2,7 +2,7 @@
  * **************************************************-
  * InGrid-iPlug DSC
  * ==================================================
- * Copyright (C) 2014 - 2022 wemove digital solutions GmbH
+ * Copyright (C) 2014 - 2023 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.1 or – as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -48,10 +48,18 @@ import java.util.stream.Collectors;
 @Service("recordMapper")
 public class BLPDocumentMapper implements IRecordMapper {
 
-    @Autowired
+    final
     Config config;
 
+    final
+    BlpScraper blpScraper;
+
     Configuration freemarkerCfg;
+
+    public BLPDocumentMapper(Config config, BlpScraper blpScraper) {
+        this.config = config;
+        this.blpScraper = blpScraper;
+    }
 
     public void createFreemarkerCfg() throws IOException {
         if (freemarkerCfg == null) {
@@ -162,11 +170,10 @@ public class BLPDocumentMapper implements IRecordMapper {
 
     public List<String> crawlUrls(Set<String> urls) {
         List<String> contents = new ArrayList<>();
-        BlpScraper blpScraper = new BlpScraper();
 
         for (String url: urls) {
             if (null != url && url.length() > 0){
-                String content = blpScraper.scrapeUrl( url );
+                String content = this.blpScraper.scrapeUrl( url );
                 if (null != content && !content.equals( "") ) {
                     contents.add( content );
                 }
