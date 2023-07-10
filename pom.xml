@@ -3,11 +3,11 @@
   <parent>
     <groupId>de.ingrid</groupId>
     <artifactId>ingrid-releases-pom</artifactId>
-    <version>6.0.0</version>
+    <version>6.2.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>ingrid-iplug-blp</artifactId>
-  <version>6.1.0</version>
+  <version>6.2.0</version>
   <packaging>jar</packaging>
   <name>InGrid iPlug BLP</name>
   <description>This iPlug indexes BLP documents from an excel file and can be queried by the iBus.</description>
@@ -130,9 +130,9 @@
     </dependency>
     <!-- Webscraping library -->
     <dependency>
-      <groupId>net.sourceforge.htmlunit</groupId>
+      <groupId>org.htmlunit</groupId>
       <artifactId>htmlunit</artifactId>
-      <version>2.66.0</version>
+      <version>3.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
