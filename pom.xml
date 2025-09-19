@@ -32,10 +32,11 @@
   <!-- ==================== PROPERTIES ==================== -->
   <properties>
     <iplug.type>IPLUG_DSC</iplug.type>
-    <ingrid-base-webapp.version>7.5.0</ingrid-base-webapp.version>
+    <ingrid-base-webapp.version>8.1.0-SNAPSHOT</ingrid-base-webapp.version>
+    <ingrid-utils.version>8.1.0-SNAPSHOT</ingrid-utils.version>
     <log4j2.version>2.22.1</log4j2.version>
-    <spring.version>3.4.2</spring.version>
-    <jackson.version>2.17.1</jackson.version>
+    <spring.version>3.5.6</spring.version>
+    <jackson.version>2.19.2</jackson.version>
     <elastic.version>8.14.1</elastic.version>
   </properties>
 
@@ -173,7 +174,7 @@
     <dependency>
       <groupId>de.ingrid</groupId>
       <artifactId>ingrid-utils</artifactId>
-      <version>7.5.0</version>
+      <version>${ingrid-utils.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
