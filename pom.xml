@@ -32,8 +32,8 @@
   <!-- ==================== PROPERTIES ==================== -->
   <properties>
     <iplug.type>IPLUG_DSC</iplug.type>
-    <ingrid-base-webapp.version>8.1.0-SNAPSHOT</ingrid-base-webapp.version>
-    <ingrid-utils.version>8.1.0-SNAPSHOT</ingrid-utils.version>
+    <ingrid-base-webapp.version>8.1.0</ingrid-base-webapp.version>
+    <ingrid-utils.version>8.1.0</ingrid-utils.version>
     <log4j2.version>2.22.1</log4j2.version>
     <spring.version>3.5.6</spring.version>
     <jackson.version>2.19.2</jackson.version>
