@@ -118,6 +118,9 @@
       "type": "double",
       "store": true
     },
+    "spatial": {
+      "type": "nested"
+    },
     "sort_hash": {
       "type": "keyword"
     }
