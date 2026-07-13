@@ -7,12 +7,17 @@ RUN unzip -q ingrid-iplug-*-installer.jar -d /tmp \
     && echo jetty.port=8080 > $INSTALL_DIR/conf/config.override.properties
 
 
-FROM docker-registry.wemove.com/ingrid-java:jre-17
+FROM bellsoft/liberica-openjre-alpine:25
 ENV INGRID_USER=ingrid
 ENV RUN_DIRECTLY=true
 
 # user, group ingrid (1000:1000) is created in base image
 COPY --chown=1000:1000 --from=builder /tmp/ingrid-iplug-blp-* /opt/ingrid/ingrid-iplug-blp/
+
+RUN addgroup --gid 1000 ingrid \
+  && adduser --gecos "" --disabled-password --uid 1000 --ingroup "ingrid" ingrid \
+  && chown -R ingrid:ingrid /opt/ingrid \
+  && chmod -R ug+rwX /opt/ingrid
 
 USER ingrid
 

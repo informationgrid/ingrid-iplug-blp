@@ -35,7 +35,7 @@
     <ingrid-base-webapp.version>8.1.0</ingrid-base-webapp.version>
     <ingrid-utils.version>8.1.0</ingrid-utils.version>
     <log4j2.version>2.22.1</log4j2.version>
-    <spring.version>3.5.13</spring.version>
+    <spring.version>3.5.16</spring.version>
     <jackson.version>2.19.2</jackson.version>
     <elastic.version>8.14.1</elastic.version>
   </properties>
@@ -251,6 +251,15 @@
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.15.0</version>
+            <configuration>
+                <source>25</source>
+                <target>25</target>
+            </configuration>
+        </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
