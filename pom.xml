@@ -241,6 +241,15 @@
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
+
+        <plugin>
+            <groupId>org.cyclonedx</groupId>
+            <artifactId>cyclonedx-maven-plugin</artifactId>
+            <configuration>
+                <projectType>application</projectType>
+                <outputFormat>json</outputFormat>
+            </configuration>
+        </plugin>
       <!--
         This plugin configures the git-flow for this project
       -->
